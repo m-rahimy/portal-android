@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Portal</string>
+    <string name="title_home">Portals</string>
+    <string name="title_dashboard">Add</string>
+    <string name="title_notifications">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_a_fragment">Hello home fragment</string>
+    <string name="hello_b_fragment">Hello add fragment</string>
+    <string name="hello_c_fragment">Hello sett fragment</string>
+</resources>
