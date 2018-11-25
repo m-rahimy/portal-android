@@ -1,13 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="190dp"
+    android:layout_margin="4dp"
+    android:padding="4dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#fff">
+
+        <ImageView
+            android:id="@+id/portal_card_main_image"
+            style="@style/imageviews"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/portal_card_image_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="5"
+            app:layout_constraintLeft_toLeftOf="@id/portal_card_main_image"
+            app:layout_constraintRight_toRightOf="@id/portal_card_main_image" />
+
+        <!-- TODO: touch to edit -->
+        <TextView
+            android:id="@+id/portal_card_name"
+            style="@style/textviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="میدان آزادی "
+            android:textColor="#111"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <!-- TODO: touch to edit -->
+        <TextView
+            android:id="@+id/portal_card_desc"
+            style="@style/textviews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="توضیحات میدان آزادی که می‌تون=اند بلند باشد .توضیحات میدان آزادی که می‌تون=اند بلند باشد توضیحات میدان آزادی که می‌تون=اند بلند باشد"
+            android:textColor="#111"
+            app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/portal_card_name" />
+    </android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FFSDFS SDF SDF "
-        android:textColor="#111" />
+        android:layout_marginBottom="16dp">
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/portal_card_like_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/portal_card_like_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="L" />
+
+            <TextView
+                android:id="@+id/portal_card_likes"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="L#" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/portal_card_report_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/portal_card_like_layout"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/portal_card_report_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="R" />
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="L#"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/portal_card_pos_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/portal_card_report_layout"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/portal_card_pos_button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="28.35, 45.68" />
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="L#"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/portal_card_pic_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/portal_card_pos_layout"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/portal_card_pics_button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="+pics" />
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="L#"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#111" />
+</RelativeLayout>
+

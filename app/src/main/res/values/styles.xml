@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="textviews">
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="imageviews">
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
 </resources>
