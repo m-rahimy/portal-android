@@ -11,6 +11,7 @@ data class Portal(
         var id: String? = "",
         var title: String? = "",
         var description: String? = "",
+        var uploader: IngressUser? = IngressUser(),
         var likes: List<IngressUser>? = listOf(),
         var reports: List<IngressUser>? = listOf(),
         var imageUrls: List<ImageUrl>? = listOf(),
@@ -24,6 +25,7 @@ data class Portal(
             portal.id = jsonPortal.optString("id")
             portal.title = jsonPortal.optString("title")
             portal.description = jsonPortal.optString("description")
+            portal.uploader = IngressUser.parse(jsonPortal.optJSONObject("uploader"))
             portal.likes = IngressUser.parseAll(jsonPortal.optJSONArray("likes"))
             portal.reports = IngressUser.parseAll(jsonPortal.optJSONArray("reports"))
             portal.imageUrls = ImageUrl.parseAll(jsonPortal.optJSONArray("image_urls"))
@@ -97,8 +99,9 @@ data class ImageUrl(
 }
 
 data class PortalLocation(
+        var id: String? = "",
         var lat: Double? = 0.0,
-        var long: Double? = 0.0,
+        var lon: Double? = 0.0,
         var uploader: IngressUser? = IngressUser(),
         var inserted_date: String? = "13971213124532",
         var updated_date: String? = "13971213124532"
@@ -106,8 +109,9 @@ data class PortalLocation(
     companion object {
         fun parse(jsonObject: JSONObject): PortalLocation {
             val pt = PortalLocation()
+            pt.id = jsonObject.optString("id")
             pt.lat = jsonObject.optDouble("lat")
-            pt.long = jsonObject.optDouble("long")
+            pt.lon = jsonObject.optDouble("lon")
             pt.uploader = IngressUser.parse(jsonObject.optJSONObject("uploader"))
             pt.inserted_date = jsonObject.optString("inserted_date")
             pt.updated_date = jsonObject.optString("updated_date")
