@@ -6,12 +6,13 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "ir.mrahimy.ingress.portal"
         minSdkVersion 17
-        targetSdkVersion 26
-        versionCode 10
-        versionName "1.0"
+        targetSdkVersion 28
+        versionCode 100
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
