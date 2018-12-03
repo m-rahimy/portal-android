@@ -1,10 +1,10 @@
-package ir.mrahimy.ingress.portal.app.model.sync
+package ir.mrahimy.ingress.portal.sync
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ir.mrahimy.ingress.portal.app.model.sync.PortalContract.DB_NAME
-import ir.mrahimy.ingress.portal.app.model.sync.PortalContract.DB_VERSION
+import ir.mrahimy.ingress.portal.sync.PortalContract.DB_NAME
+import ir.mrahimy.ingress.portal.sync.PortalContract.DB_VERSION
 
 /**
  * Created by vincent on 11/26/18.

@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.app.model
+package ir.mrahimy.ingress.portal.model
 
 import org.json.JSONArray
 import org.json.JSONObject

@@ -6,5 +6,4 @@ import android.app.Application
  * Created by vincent on 11/16/18.
  */
 
-class App : Application()//TODO: add double sync
-//TODO: make server
+class App : Application()

@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.app.model.sync
+package ir.mrahimy.ingress.portal.sync
 
 import android.content.ContentProvider
 import android.content.ContentUris

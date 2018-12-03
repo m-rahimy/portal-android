@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.app.model.sync
+package ir.mrahimy.ingress.portal.sync
 
 import android.accounts.Account
 import android.accounts.AccountManager
@@ -58,8 +58,7 @@ object AccountGeneral {
 
         // Force a sync if the account was just created
         if (created) {
-            //TODO:
-            //SyncAdapter.performSync();
+            SyncAdapter.performSync()
         }
     }
 }

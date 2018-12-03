@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="ir.mrahimy.ingress.portal"
+    android:icon="@mipmap/ic_launcher"
+    android:label="Allow two way sync"
+    android:accountPreferences="@xml/syncsettings"/>
