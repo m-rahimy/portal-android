@@ -85,11 +85,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c?.moveToFirst()
 
                 val id =""
-                val id =""
-                val id =""
-                val id =""
-                val id =""
-                val id =""
+                //TODO
 
             }
         })

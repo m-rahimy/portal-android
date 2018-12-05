@@ -1,5 +1,6 @@
 package ir.mrahimy.ingress.portal.model
 
+import ir.mrahimy.ingress.portal.dbmodel.DbPortalLike
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -46,6 +47,7 @@ data class Portal(
     }
 }
 
+//
 data class IngressUser(
         var name: String? = "...",
         var email: String? = "...",
@@ -72,6 +74,7 @@ data class IngressUser(
     }
 }
 
+//
 data class ImageUrl(
         var url: String? = "",
         var uploader: IngressUser? = IngressUser(),
@@ -82,7 +85,7 @@ data class ImageUrl(
         fun parse(jsonImageUrl: JSONObject): ImageUrl {
             val url = ImageUrl()
             url.url = jsonImageUrl.optString("url")
-            url.uploader = IngressUser.parse(jsonImageUrl.optJSONObject("user"))
+            url.uploader = IngressUser.parse(jsonImageUrl.optJSONObject("uploader"))
             url.inserted_date = jsonImageUrl.optString("inserted_date")
             url.updated_date = jsonImageUrl.optString("updated_date")
             return url
@@ -98,6 +101,7 @@ data class ImageUrl(
     }
 }
 
+//
 data class PortalLocation(
         var id: String? = "",
         var lat: Double? = 0.0,
@@ -120,6 +124,122 @@ data class PortalLocation(
 
         fun parseAll(jsonArray: JSONArray): List<PortalLocation> {
             val res = mutableListOf<PortalLocation>()
+            (0 until jsonArray.length()).forEach {
+                res.add(parse(jsonArray.optJSONObject(it)))
+            }
+            return res
+        }
+    }
+}
+
+data class PortalJuncLocation(
+        var id: String? = "",
+        var portal: Portal? = Portal(),
+        var location: PortalLocation? = PortalLocation(),
+        var inserted_date: String? = "",
+        var updated_date: String? = ""
+) {
+    companion object {
+        fun parse(jsonObject: JSONObject): PortalJuncLocation {
+            val res = PortalJuncLocation()
+            res.id = jsonObject.optString("id")
+            res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
+            res.location = PortalLocation.parse(jsonObject.optJSONObject("location"))
+            res.inserted_date = jsonObject.optString("inserted_date")
+            res.updated_date = jsonObject.optString("updated_date")
+            return res
+        }
+
+        fun parseAll(jsonArray: JSONArray): List<PortalJuncLocation> {
+            val res = mutableListOf<PortalJuncLocation>()
+            (0 until jsonArray.length()).forEach {
+                res.add(parse(jsonArray.optJSONObject(it)))
+            }
+            return res
+        }
+    }
+}
+
+data class PortalLike(
+        var id: String? = "id",
+        var portal: Portal? = Portal(),
+        var username: IngressUser? = IngressUser(),
+        var inserted_date: String? = "",
+        var updated_date: String? = ""
+) {
+    companion object {
+        fun parse(jsonObject: JSONObject): PortalLike {
+            val res = PortalLike()
+            res.id = jsonObject.optString("id")
+            res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
+            res.username = IngressUser.parse(jsonObject.optJSONObject("user"))
+            res.inserted_date = jsonObject.optString("inserted_date")
+            res.updated_date = jsonObject.optString("updated_date")
+            return res
+        }
+
+        fun parseAll(jsonArray: JSONArray): List<PortalLike> {
+            val res = mutableListOf<PortalLike>()
+            (0 until jsonArray.length()).forEach {
+                res.add(parse(jsonArray.optJSONObject(it)))
+            }
+            return res
+        }
+    }
+}
+
+
+data class PortalImage(
+        var id: String? = "",
+        var portal: Portal? = Portal(),
+        var image: ImageUrl? = ImageUrl(),
+        var inserted_date: String? = "",
+        var updated_date: String? = ""
+) {
+    companion object {
+        fun parse(jsonObject: JSONObject): PortalImage {
+            val res = PortalImage()
+            res.id = jsonObject.optString("id")
+            res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
+            res.image = ImageUrl.parse(jsonObject.optJSONObject("image"))
+            res.inserted_date = jsonObject.optString("inserted_date")
+            res.updated_date = jsonObject.optString("updated_date")
+            return res
+        }
+
+        fun parseAll(jsonArray: JSONArray): List<PortalImage> {
+            val res = mutableListOf<PortalImage>()
+            (0 until jsonArray.length()).forEach {
+                res.add(parse(jsonArray.optJSONObject(it)))
+            }
+            return res
+        }
+    }
+}
+
+data class PortalReport(
+        var id: String? = "",
+        var portal: Portal? = Portal(),
+        var description: String? = "",
+        var username: IngressUser? = IngressUser(),
+        var inserted_date: String? = "",
+        var updated_date: String? = ""
+) {
+    companion object {
+        fun parse(jsonObject: JSONObject): PortalReport {
+            val res = PortalReport()
+            res.id = jsonObject.optString("id")
+            res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
+            res.description = jsonObject.optString("description")
+            res.username = IngressUser.parse(jsonObject.optJSONObject("username"))
+            res.inserted_date = jsonObject.optString("inserted_date")
+            res.updated_date = jsonObject.optString("updated_date")
+
+            return res
+        }
+
+        fun parseAll(jsonArray: JSONArray): List<PortalReport> {
+            val res = mutableListOf<PortalReport>()
             (0 until jsonArray.length()).forEach {
                 res.add(parse(jsonArray.optJSONObject(it)))
             }

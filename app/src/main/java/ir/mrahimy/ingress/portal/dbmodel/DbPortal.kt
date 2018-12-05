@@ -116,7 +116,7 @@ data class DbPortalLocation(
         }
     }
 }
-
+//
 data class DbPortalJuncLocation(
         var id: String? = "",
         var portal_id: String? = "",
