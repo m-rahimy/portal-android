@@ -6,19 +6,19 @@ import android.net.Uri
  * Created by vincent on 11/26/18.
  */
 
-public object PortalContract {
-    public val CONTENT_AUTHORITY = "ir.mrahimy.ingress.portal"
-    public val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
-    public val PATH_PORTALS = "portals"
-    public val PATH_IMAGE_URLS = "image_urls"
-    public val PATH_Ingress_User = "ingress_user"
-    public val PATH_portal_junc_location = "portal_junc_location"
-    public val PATH_portal_like = "portal_like"
-    public val PATH_portal_image = "portal_image"
-    public val PATH_portal_location = "portal_location"
-    public val PATH_portal_report = "portal_report"
-    public val DB_NAME = "portals_db"
-    public val DB_VERSION = 1
+object PortalContract {
+    val CONTENT_AUTHORITY = "ir.mrahimy.ingress.portal"
+    val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
+    val PATH_PORTALS = "portals"
+    val PATH_IMAGE_URLS = "image_urls"
+    val PATH_Ingress_User = "ingress_user"
+    val PATH_portal_junc_location = "portal_junc_location"
+    val PATH_portal_like = "portal_like"
+    val PATH_portal_image = "portal_image"
+    val PATH_portal_location = "portal_location"
+    val PATH_portal_report = "portal_report"
+    val DB_NAME = "portals_db"
+    val DB_VERSION = 1
 
     object Portal {
         val TABLE_NAME = "portal"
