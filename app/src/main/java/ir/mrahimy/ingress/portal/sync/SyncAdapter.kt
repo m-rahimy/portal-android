@@ -7,7 +7,6 @@ import android.os.RemoteException
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
-import ir.mrahimy.ingress.portal.dbmodel.DbPortal
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import timber.log.Timber
 import org.json.JSONArray
@@ -15,7 +14,7 @@ import org.json.JSONException
 import java.io.IOException
 import android.content.Intent
 import android.content.ContentProviderOperation
-import ir.mrahimy.ingress.portal.dbmodel.DbImageUrl
+import ir.mrahimy.ingress.portal.dbmodel.*
 import org.json.JSONObject
 
 
@@ -186,15 +185,312 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
     }
 
     private fun syncLikes(syncResult: SyncResult) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val nets = mutableMapOf<String, DbPortalLike>()
+        PortalRestClient.get(PortalContract.PATH_portal_like, RequestParams(), object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("syncACTIONS: $response")
+                for (i in 0 until response!!.length()) {
+                    val element = DbPortalLike.parse(response.optJSONObject(i))
+                    nets[element.id!!] = element
+                }
+                val batch = arrayListOf<ContentProviderOperation>()
+                val c = contentResolver.query(PortalContract.PortalLike.CONTENT_URI, null, null, null, null)
+                c?.moveToFirst()
+
+                /*
+                COL_id = "id"
+                COL_portalID = "portal_id"
+                COL_username = "username"
+                COL_inserted_date = "inserted_date"
+                COL_updated_date = "updated_date"
+                 */
+                var id = ""
+                var pid = ""
+                var username = ""
+                var inserted_date = "13971213124532"
+                var updated_date = "13971213124532"
+
+                var netWorkPortalLike: DbPortalLike?
+
+                (0 until c!!.count).forEach {
+                    syncResult.stats.numEntries++
+                    // Create local portal entry
+                    id = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_id))
+                    pid = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_portalID))
+                    username = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_username))
+                    inserted_date = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_inserted_date))
+                    updated_date = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_updated_date))
+
+                    netWorkPortalLike = nets[id]
+                    if (netWorkPortalLike == null) {
+                        //exist in local but not server
+                        //send to server
+                        val local = DbPortalLike(id, pid, username,
+                                inserted_date, updated_date)
+                        sendToServer(local)
+                    } else {
+                        // does not exist in local
+                        nets.remove(id)
+                        // update?
+                        if (netWorkPortalLike!!.updated_date?.compareTo(updated_date)!! > 0) {
+                            //update local
+                            batch.add(ContentProviderOperation.newUpdate(PortalContract.PortalLike.CONTENT_URI)
+                                    .withSelection(PortalContract.PortalLike.COL_id + "='" + id + "'", null)
+                                    .withValue(PortalContract.PortalLike.COL_portalID, netWorkPortalLike!!.portal_id)
+                                    .withValue(PortalContract.PortalLike.COL_username, netWorkPortalLike!!.username)
+                                    .withValue(PortalContract.PortalLike.COL_inserted_date, netWorkPortalLike!!.inserted_date)
+                                    .withValue(PortalContract.PortalLike.COL_updated_date, netWorkPortalLike!!.updated_date)
+                                    .build())
+                            syncResult.stats.numUpdates++
+                        } else if (netWorkPortalLike!!.updated_date?.compareTo(updated_date)!! < 0) {
+                            // send to server
+                            val local = DbPortalLike(id, pid, username,
+                                    inserted_date, updated_date)
+                            sendToServer(local)
+                        }
+                    }//null or not null check done
+
+                    c.moveToNext()
+                }
+                c.close()
+                //after cursor loop
+
+                /*
+                COL_id = "id"
+                COL_portalID = "portal_id"
+                COL_locationID = "location_id"
+                COL_inserted_date = "inserted_date"
+                COL_updated_date = "updated_date"
+                 */
+                for (e in nets.values) {
+                    Timber.i("$TAG, Scheduling insert RowTitle: $e")
+                    batch.add(ContentProviderOperation.newInsert(PortalContract.PortalLike.CONTENT_URI)
+                            .withValue(PortalContract.PortalLike.COL_id, e.id)
+                            .withValue(PortalContract.PortalLike.COL_portalID, e.portal_id)
+                            .withValue(PortalContract.PortalLike.COL_username, e.username)
+                            .withValue(PortalContract.PortalLike.COL_inserted_date, e.inserted_date)
+                            .withValue(PortalContract.PortalLike.COL_updated_date, e.updated_date)
+                            .build())
+
+                    syncResult.stats.numInserts++
+                }
+
+                contentResolver.applyBatch(PortalContract.CONTENT_AUTHORITY, batch)
+                contentResolver.notifyChange(PortalContract.PortalLike.CONTENT_URI,
+                        null, false)
+            }// end onSuccess
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
     }
 
     private fun syncPortalJuncLoc(syncResult: SyncResult) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val nets = mutableMapOf<String, DbPortalJuncLocation>()
+        PortalRestClient.get(PortalContract.PATH_portal_junc_location, RequestParams(), object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("syncACTIONS: $response")
+                for (i in 0 until response!!.length()) {
+                    val juncLocation = DbPortalJuncLocation.parse(response.optJSONObject(i))
+                    nets[juncLocation.id!!] = juncLocation
+                }
+                val batch = arrayListOf<ContentProviderOperation>()
+                val c = contentResolver.query(PortalContract.PortalJuncLocation.CONTENT_URI, null, null, null, null)
+                c?.moveToFirst()
+
+                /*
+                COL_id = "id"
+                COL_portalID = "portal_id"
+                COL_locationID = "location_id"
+                COL_inserted_date = "inserted_date"
+                COL_updated_date = "updated_date"
+                 */
+                var id = ""
+                var pid = ""
+                var lid = ""
+                var inserted_date = "13971213124532"
+                var updated_date = "13971213124532"
+
+                var networkPortalJuncLocation: DbPortalJuncLocation?
+
+                (0 until c!!.count).forEach {
+                    syncResult.stats.numEntries++
+                    // Create local portal entry
+                    id = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_id))
+                    pid = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_portalID))
+                    lid = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_locationID))
+                    inserted_date = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_inserted_date))
+                    updated_date = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_updated_date))
+
+                    networkPortalJuncLocation = nets[id]
+                    if (networkPortalJuncLocation == null) {
+                        //exist in local but not server
+                        //send to server
+                        val local = DbPortalJuncLocation(id, pid, lid,
+                                inserted_date, updated_date)
+                        sendToServer(local)
+                    } else {
+                        // does not exist in local
+                        nets.remove(id)
+                        // update?
+                        if (networkPortalJuncLocation!!.updated_date?.compareTo(updated_date)!! > 0) {
+                            //update local
+                            batch.add(ContentProviderOperation.newUpdate(PortalContract.PortalJuncLocation.CONTENT_URI)
+                                    .withSelection(PortalContract.PortalJuncLocation.COL_id + "='" + id + "'", null)
+                                    .withValue(PortalContract.PortalJuncLocation.COL_portalID, networkPortalJuncLocation!!.portal_id)
+                                    .withValue(PortalContract.PortalJuncLocation.COL_locationID, networkPortalJuncLocation!!.location_id)
+                                    .withValue(PortalContract.PortalJuncLocation.COL_inserted_date, networkPortalJuncLocation!!.inserted_date)
+                                    .withValue(PortalContract.PortalJuncLocation.COL_updated_date, networkPortalJuncLocation!!.updated_date)
+                                    .build())
+                            syncResult.stats.numUpdates++
+                        } else if (networkPortalJuncLocation!!.updated_date?.compareTo(updated_date)!! < 0) {
+                            // send to server
+                            val local = DbPortalJuncLocation(id, pid, lid,
+                                    inserted_date, updated_date)
+                            sendToServer(local)
+                        }
+                    }//null or not null check done
+
+                    c.moveToNext()
+                }
+                c.close()
+                //after cursor loop
+
+                /*
+                COL_id = "id"
+                COL_portalID = "portal_id"
+                COL_locationID = "location_id"
+                COL_inserted_date = "inserted_date"
+                COL_updated_date = "updated_date"
+                 */
+                for (e in nets.values) {
+                    Timber.i("$TAG, Scheduling insert RowTitle: $e")
+                    batch.add(ContentProviderOperation.newInsert(PortalContract.PortalJuncLocation.CONTENT_URI)
+                            .withValue(PortalContract.PortalJuncLocation.COL_id, e.id)
+                            .withValue(PortalContract.PortalJuncLocation.COL_portalID, e.portal_id)
+                            .withValue(PortalContract.PortalJuncLocation.COL_locationID, e.location_id)
+                            .withValue(PortalContract.PortalJuncLocation.COL_inserted_date, e.inserted_date)
+                            .withValue(PortalContract.PortalJuncLocation.COL_updated_date, e.updated_date)
+                            .build())
+
+                    syncResult.stats.numInserts++
+                }
+
+                contentResolver.applyBatch(PortalContract.CONTENT_AUTHORITY, batch)
+                contentResolver.notifyChange(PortalContract.PortalJuncLocation.CONTENT_URI,
+                        null, false)
+            }// end onSuccess
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
     }
 
     private fun syncIngressUser(syncResult: SyncResult) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val nets = mutableMapOf<String, DbIngressUser>()
+        PortalRestClient.get(PortalContract.PATH_Ingress_User, RequestParams(), object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("syncACTIONS: $response")
+                for (i in 0 until response!!.length()) {
+                    val ingressUser = DbIngressUser.parse(response.optJSONObject(i))
+                    nets[ingressUser.name!!] = ingressUser
+                }
+                val batch = arrayListOf<ContentProviderOperation>()
+                val c = contentResolver.query(PortalContract.IngressUser.CONTENT_URI, null, null, null, null)
+                c?.moveToFirst()
+
+                /*
+                val COL_name = "name"
+                val COL_email = "email"
+                val COL_inserted_date = "inserted_date"
+                val COL_updated_date = "updated_date"
+                 */
+                var name = ""
+                var email = ""
+                var inserted_date = "13971213124532"
+                var updated_date = "13971213124532"
+
+                var networkIngressUser: DbIngressUser?
+
+                (0 until c!!.count).forEach {
+                    syncResult.stats.numEntries++
+                    // Create local portal entry
+                    name = c.getString(c.getColumnIndex(PortalContract.IngressUser.COL_name))
+                    email = c.getString(c.getColumnIndex(PortalContract.IngressUser.COL_email))
+                    inserted_date = c.getString(c.getColumnIndex(PortalContract.IngressUser.COL_inserted_date))
+                    updated_date = c.getString(c.getColumnIndex(PortalContract.IngressUser.COL_updated_date))
+
+                    networkIngressUser = nets[name]
+                    if (networkIngressUser == null) {
+                        //exist in local but not server
+                        //send to server
+                        val localIngressUser = DbIngressUser(name, email,
+                                inserted_date, updated_date)
+                        sendToServer(localIngressUser)
+                    } else {
+                        // does not exist in local
+                        nets.remove(name)
+                        // update?
+                        if (networkIngressUser!!.updated_date?.compareTo(updated_date)!! > 0) {
+                            //update local
+                            batch.add(ContentProviderOperation.newUpdate(PortalContract.IngressUser.CONTENT_URI)
+                                    .withSelection(PortalContract.IngressUser.COL_name + "='" + name + "'", null)
+                                    .withValue(PortalContract.IngressUser.COL_email, networkIngressUser!!.email)
+                                    .withValue(PortalContract.IngressUser.COL_inserted_date, networkIngressUser!!.inserted_date)
+                                    .withValue(PortalContract.IngressUser.COL_updated_date, networkIngressUser!!.updated_date)
+                                    .build())
+                            syncResult.stats.numUpdates++
+                        } else if (networkIngressUser!!.updated_date?.compareTo(updated_date)!! < 0) {
+                            // send to server
+                            val localIngressUser = DbIngressUser(name, email,
+                                    inserted_date, updated_date)
+                            sendToServer(localIngressUser)
+                        }
+                    }//null or not null check done
+
+                    c.moveToNext()
+                }
+                c.close()
+                //after cursor loop
+
+                /*
+                COL_url = "url"
+                COL_uploader = "uploader"
+                COL_inserted_date = "inserted_date"
+                COL_updated_date = "updated_date"
+                 */
+
+                for (e in nets.values) {
+                    Timber.i("$TAG, Scheduling insert RowTitle: $e")
+                    batch.add(ContentProviderOperation.newInsert(PortalContract.IngressUser.CONTENT_URI)
+                            .withValue(PortalContract.IngressUser.COL_name, e.name)
+                            .withValue(PortalContract.IngressUser.COL_email, e.email)
+                            .withValue(PortalContract.IngressUser.COL_inserted_date, e.inserted_date)
+                            .withValue(PortalContract.IngressUser.COL_updated_date, e.updated_date)
+                            .build())
+
+                    syncResult.stats.numInserts++
+                }
+
+                contentResolver.applyBatch(PortalContract.CONTENT_AUTHORITY, batch)
+                contentResolver.notifyChange(PortalContract.IngressUser.CONTENT_URI,
+                        null, false)
+            }// end onSuccess
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
     }
 
     private fun syncImageUrls(syncResult: SyncResult) {
@@ -384,6 +680,68 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 contentResolver.notifyChange(PortalContract.Portal.CONTENT_URI,
                         null, false)
             }// end onSuccess
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
+    }
+
+    private fun sendToServer(local: DbPortalLike) {
+        val params = RequestParams()
+        params.add(PortalContract.PortalLike.COL_id, local.id)
+        params.add(PortalContract.PortalLike.COL_portalID, local.portal_id)
+        params.add(PortalContract.PortalLike.COL_username, local.username)
+        params.add(PortalContract.PortalLike.COL_inserted_date, local.inserted_date)
+        params.add(PortalContract.PortalLike.COL_updated_date, local.updated_date)
+
+        PortalRestClient.post(PortalContract.PATH_portal_like, params, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("$TAG, $response")
+            }
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
+    }
+
+    private fun sendToServer(localPortalJuncLocation: DbPortalJuncLocation) {
+        val params = RequestParams()
+        params.add(PortalContract.PortalJuncLocation.COL_id, localPortalJuncLocation.id)
+        params.add(PortalContract.PortalJuncLocation.COL_portalID, localPortalJuncLocation.portal_id)
+        params.add(PortalContract.PortalJuncLocation.COL_locationID, localPortalJuncLocation.location_id)
+        params.add(PortalContract.PortalJuncLocation.COL_inserted_date, localPortalJuncLocation.inserted_date)
+        params.add(PortalContract.PortalJuncLocation.COL_updated_date, localPortalJuncLocation.updated_date)
+
+        PortalRestClient.post(PortalContract.PATH_portal_junc_location, params, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("$TAG, $response")
+            }
+
+            override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+                super.onFailure(statusCode, headers, responseString, throwable)
+                Timber.d("$TAG, $responseString")
+            }
+        })
+    }
+
+    private fun sendToServer(localIngressUser: DbIngressUser) {
+        val params = RequestParams()
+        params.add(PortalContract.IngressUser.COL_name, localIngressUser.name)
+        params.add(PortalContract.IngressUser.COL_email, localIngressUser.email)
+        params.add(PortalContract.IngressUser.COL_inserted_date, localIngressUser.inserted_date)
+        params.add(PortalContract.IngressUser.COL_updated_date, localIngressUser.updated_date)
+
+        PortalRestClient.post(PortalContract.PATH_Ingress_User, params, object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
+                super.onSuccess(statusCode, headers, response)
+                Timber.d("$TAG, $response")
+            }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
