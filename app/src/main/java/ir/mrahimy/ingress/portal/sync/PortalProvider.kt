@@ -229,17 +229,15 @@ class PortalProvider : ContentProvider() {
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
-        val rows: Int
-        //TODO:
-        when (uriMatcher.match(uri)) {
-            PORTAL -> rows = db!!.update(PortalContract.Portal.TABLE_NAME, values, selection, selectionArgs)
-            IMAGE_URL -> rows = db!!.update(PortalContract.ImageUrl.TABLE_NAME, values, selection, selectionArgs)
-            INGRESS_USER -> rows = db!!.update(PortalContract.IngressUser.TABLE_NAME, values, selection, selectionArgs)
-            Portal_Junc_Location -> rows = db!!.update(PortalContract.PortalJuncLocation.TABLE_NAME, values, selection, selectionArgs)
-            Portal_Like -> rows = db!!.update(PortalContract.PortalLike.TABLE_NAME, values, selection, selectionArgs)
-            Portal_Image -> rows = db!!.update(PortalContract.PortalImage.TABLE_NAME, values, selection, selectionArgs)
-            Portal_Location -> rows = db!!.update(PortalContract.PortalLocation.TABLE_NAME, values, selection, selectionArgs)
-            Portal_Report -> rows = db!!.update(PortalContract.PortalReport.TABLE_NAME, values, selection, selectionArgs)
+        val rows: Int = when (uriMatcher.match(uri)) {
+            PORTAL -> db!!.update(PortalContract.Portal.TABLE_NAME, values, selection, selectionArgs)
+            IMAGE_URL -> db!!.update(PortalContract.ImageUrl.TABLE_NAME, values, selection, selectionArgs)
+            INGRESS_USER -> db!!.update(PortalContract.IngressUser.TABLE_NAME, values, selection, selectionArgs)
+            Portal_Junc_Location -> db!!.update(PortalContract.PortalJuncLocation.TABLE_NAME, values, selection, selectionArgs)
+            Portal_Like -> db!!.update(PortalContract.PortalLike.TABLE_NAME, values, selection, selectionArgs)
+            Portal_Image -> db!!.update(PortalContract.PortalImage.TABLE_NAME, values, selection, selectionArgs)
+            Portal_Location -> db!!.update(PortalContract.PortalLocation.TABLE_NAME, values, selection, selectionArgs)
+            Portal_Report -> db!!.update(PortalContract.PortalReport.TABLE_NAME, values, selection, selectionArgs)
             else -> throw IllegalArgumentException("Invalid URI!")
         }
 
@@ -252,16 +250,15 @@ class PortalProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val rows: Int
-        when (uriMatcher.match(uri)) {
-            PORTAL -> rows = db!!.delete(PortalContract.Portal.TABLE_NAME, selection, selectionArgs)
-            IMAGE_URL -> rows = db!!.delete(PortalContract.ImageUrl.TABLE_NAME, selection, selectionArgs)
-            INGRESS_USER -> rows = db!!.delete(PortalContract.IngressUser.TABLE_NAME, selection, selectionArgs)
-            Portal_Junc_Location -> rows = db!!.delete(PortalContract.PortalJuncLocation.TABLE_NAME, selection, selectionArgs)
-            Portal_Like -> rows = db!!.delete(PortalContract.PortalLike.TABLE_NAME, selection, selectionArgs)
-            Portal_Image -> rows = db!!.delete(PortalContract.PortalImage.TABLE_NAME, selection, selectionArgs)
-            Portal_Location -> rows = db!!.delete(PortalContract.PortalLocation.TABLE_NAME, selection, selectionArgs)
-            Portal_Report -> rows = db!!.delete(PortalContract.PortalReport.TABLE_NAME, selection, selectionArgs)
+        val rows: Int = when (uriMatcher.match(uri)) {
+            PORTAL -> db!!.delete(PortalContract.Portal.TABLE_NAME, selection, selectionArgs)
+            IMAGE_URL -> db!!.delete(PortalContract.ImageUrl.TABLE_NAME, selection, selectionArgs)
+            INGRESS_USER -> db!!.delete(PortalContract.IngressUser.TABLE_NAME, selection, selectionArgs)
+            Portal_Junc_Location -> db!!.delete(PortalContract.PortalJuncLocation.TABLE_NAME, selection, selectionArgs)
+            Portal_Like -> db!!.delete(PortalContract.PortalLike.TABLE_NAME, selection, selectionArgs)
+            Portal_Image -> db!!.delete(PortalContract.PortalImage.TABLE_NAME, selection, selectionArgs)
+            Portal_Location -> db!!.delete(PortalContract.PortalLocation.TABLE_NAME, selection, selectionArgs)
+            Portal_Report -> db!!.delete(PortalContract.PortalReport.TABLE_NAME, selection, selectionArgs)
             else -> throw IllegalArgumentException("Invalid URI!")
         }
 
@@ -298,7 +295,6 @@ class PortalProvider : ContentProvider() {
 
         init {
             // Add all our query types to our UriMatcher
-            //TODO:
             uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
             uriMatcher.addURI(PortalContract.CONTENT_AUTHORITY, PortalContract.PATH_PORTALS, PORTAL)

@@ -27,12 +27,10 @@ class MainActivity : AppCompatActivity(),
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_add_portal -> {
-                //TODO: add portals
                 goto(AddPortalFragment.newInstance("A", "B"))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_settings -> {
-                // TODO: settings
                 goto(SettingsFragment.newInstance("A", "B"))
                 return@OnNavigationItemSelectedListener true
             }
