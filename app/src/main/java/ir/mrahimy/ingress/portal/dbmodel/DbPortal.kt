@@ -2,6 +2,7 @@ package ir.mrahimy.ingress.portal.dbmodel
 
 import android.database.Cursor
 import ir.mrahimy.ingress.portal.sync.PortalContract
+import ir.mrahimy.ingress.portal.util.toBoolean
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -329,6 +330,7 @@ data class DbPortalLike(
         var id: String? = "id",
         var portal_id: String? = "",
         var username: String? = "",
+        var like: Boolean? = false,
         var inserted_date: String? = "",
         var updated_date: String? = ""
 ) {
@@ -338,6 +340,7 @@ data class DbPortalLike(
             res.id = jsonObject.optString("id")
             res.portal_id = jsonObject.optString("portal_id")
             res.username = jsonObject.optString("username")
+            res.like = jsonObject.optBoolean("_like")
             res.inserted_date = jsonObject.optString("inserted_date")
             res.updated_date = jsonObject.optString("updated_date")
             return res
@@ -356,6 +359,7 @@ data class DbPortalLike(
             res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_id))
             res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_portalID))
             res.username = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_username))
+            res.like = cursor.getInt(cursor.getColumnIndex(PortalContract.PortalLike.COL_like)).toBoolean()
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_updated_date))
             return res

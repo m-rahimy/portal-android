@@ -16,6 +16,8 @@ import android.content.Intent
 import android.content.ContentProviderOperation
 import android.util.Log
 import ir.mrahimy.ingress.portal.dbmodel.*
+import ir.mrahimy.ingress.portal.util.toBoolean
+import ir.mrahimy.ingress.portal.util.toInt
 import org.json.JSONObject
 
 
@@ -41,7 +43,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
     private fun sync(syncResult: SyncResult) {
         Log.d(TAG, "sync started")
         /*try {*/
-            syncPortals(syncResult)
+        syncPortals(syncResult)
         /*} catch (ex: IOException) {
             Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
@@ -463,6 +465,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 var id = ""
                 var pid = ""
                 var username = ""
+                var like = false
                 var inserted_date = "13971213124532"
                 var updated_date = "13971213124532"
 
@@ -474,6 +477,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     id = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_id))
                     pid = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_portalID))
                     username = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_username))
+                    like = c.getInt(c.getColumnIndex(PortalContract.PortalLike.COL_like)).toBoolean()
                     inserted_date = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_inserted_date))
                     updated_date = c.getString(c.getColumnIndex(PortalContract.PortalLike.COL_updated_date))
 
@@ -481,7 +485,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     if (netWorkPortalLike == null) {
                         //exist in local / not server
                         //send to server
-                        val local = DbPortalLike(id, pid, username,
+                        val local = DbPortalLike(id, pid, username, like,
                                 inserted_date, updated_date)
                         sendToServer(local)
                     } else {
@@ -494,13 +498,14 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                                     .withSelection(PortalContract.PortalLike.COL_id + "='" + id + "'", null)
                                     .withValue(PortalContract.PortalLike.COL_portalID, netWorkPortalLike!!.portal_id)
                                     .withValue(PortalContract.PortalLike.COL_username, netWorkPortalLike!!.username)
+                                    .withValue(PortalContract.PortalLike.COL_like, netWorkPortalLike!!.like)
                                     .withValue(PortalContract.PortalLike.COL_inserted_date, netWorkPortalLike!!.inserted_date)
                                     .withValue(PortalContract.PortalLike.COL_updated_date, netWorkPortalLike!!.updated_date)
                                     .build())
                             syncResult.stats.numUpdates++
                         } else if (netWorkPortalLike!!.updated_date?.compareTo(updated_date)!! < 0) {
                             // send to server
-                            val local = DbPortalLike(id, pid, username,
+                            val local = DbPortalLike(id, pid, username, like,
                                     inserted_date, updated_date)
                             sendToServer(local)
                         }
@@ -516,6 +521,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                             .withValue(PortalContract.PortalLike.COL_id, e.id)
                             .withValue(PortalContract.PortalLike.COL_portalID, e.portal_id)
                             .withValue(PortalContract.PortalLike.COL_username, e.username)
+                            .withValue(PortalContract.PortalLike.COL_like, e.like)
                             .withValue(PortalContract.PortalLike.COL_inserted_date, e.inserted_date)
                             .withValue(PortalContract.PortalLike.COL_updated_date, e.updated_date)
                             .build())
@@ -959,6 +965,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalLike.COL_id, local.id)
         params.add(PortalContract.PortalLike.COL_portalID, local.portal_id)
         params.add(PortalContract.PortalLike.COL_username, local.username)
+        params.add(PortalContract.PortalLike.COL_like, local.like!!.toInt().toString())
         params.add(PortalContract.PortalLike.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalLike.COL_updated_date, local.updated_date)
 

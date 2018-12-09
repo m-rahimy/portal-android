@@ -67,3 +67,6 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     return res
 
 }
+
+fun Int.toBoolean() = this == 1
+fun Boolean.toInt() = if (this) 1 else 0

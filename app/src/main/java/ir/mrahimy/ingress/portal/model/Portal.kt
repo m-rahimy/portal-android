@@ -177,6 +177,7 @@ data class PortalLike(
         var id: String? = "id",
         var portal: Portal? = Portal(),
         var username: IngressUser? = IngressUser(),
+        var like: Boolean? = false,
         var inserted_date: String? = "",
         var updated_date: String? = ""
 ) {
@@ -186,6 +187,7 @@ data class PortalLike(
             res.id = jsonObject.optString("id")
             res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
             res.username = IngressUser.parse(jsonObject.optJSONObject("user"))
+            res.like = jsonObject.optBoolean("_like")
             res.inserted_date = jsonObject.optString("inserted_date")
             res.updated_date = jsonObject.optString("updated_date")
             return res
@@ -205,6 +207,7 @@ data class PortalLike(
             res.inserted_date = dblike.inserted_date
             res.updated_date = dblike.updated_date
             res.username = IngressUser.parse(DbIngressUser.getByName(dbIngressUsers, dblike.username!!))
+            res.like = dblike.like
             // TODO: Portal?
             return res
         }

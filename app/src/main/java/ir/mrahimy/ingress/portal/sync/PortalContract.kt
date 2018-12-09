@@ -79,6 +79,7 @@ object PortalContract {
         val COL_id = "id"
         val COL_portalID = "portal_id"
         val COL_username = "username"
+        val COL_like = "like"
         val COL_inserted_date = "inserted_date"
         val COL_updated_date = "updated_date"
 
