@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.fragments
+package ir.mrahimy.ingress.portal.view.fragments
 
 import android.content.Context
 import android.net.Uri

@@ -1,6 +1,8 @@
 package ir.mrahimy.ingress.portal.model
 
+import ir.mrahimy.ingress.portal.dbmodel.DbIngressUser
 import ir.mrahimy.ingress.portal.dbmodel.DbPortalLike
+import ir.mrahimy.ingress.portal.dbmodel.DbPortalReport
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -13,8 +15,8 @@ data class Portal(
         var title: String? = "",
         var description: String? = "",
         var uploader: IngressUser? = IngressUser(),
-        var likes: List<IngressUser>? = listOf(),
-        var reports: List<IngressUser>? = listOf(),
+        var likes: List<PortalLike>? = listOf(),
+        var reports: List<PortalReport>? = listOf(),
         var imageUrls: List<ImageUrl>? = listOf(),
         var locations: List<PortalLocation>? = listOf(),
         var inserted_date: String? = "13971213124532",
@@ -27,8 +29,8 @@ data class Portal(
             portal.title = jsonPortal.optString("title")
             portal.description = jsonPortal.optString("description")
             portal.uploader = IngressUser.parse(jsonPortal.optJSONObject("uploader"))
-            portal.likes = IngressUser.parseAll(jsonPortal.optJSONArray("likes"))
-            portal.reports = IngressUser.parseAll(jsonPortal.optJSONArray("reports"))
+            portal.likes = PortalLike.parseAll(jsonPortal.optJSONArray("likes"))
+            portal.reports = PortalReport.parseAll(jsonPortal.optJSONArray("reports"))
             portal.imageUrls = ImageUrl.parseAll(jsonPortal.optJSONArray("image_urls"))
             portal.locations = PortalLocation.parseAll(jsonPortal.optJSONArray("locations"))
             portal.inserted_date = jsonPortal.optString("inserted_date")
@@ -44,6 +46,7 @@ data class Portal(
 
             return res
         }
+
     }
 }
 
@@ -71,6 +74,16 @@ data class IngressUser(
             }
             return res
         }
+
+        fun parse(dbIngressUser: DbIngressUser): IngressUser {
+            val user = IngressUser()
+            user.name = dbIngressUser.name
+            user.email = dbIngressUser.email
+            user.inserted_date = dbIngressUser.inserted_date
+            user.updated_date = dbIngressUser.updated_date
+            return user
+        }
+
     }
 }
 
@@ -185,6 +198,24 @@ data class PortalLike(
             }
             return res
         }
+
+        fun parse(dbIngressUsers: List<DbIngressUser>, dblike: DbPortalLike): PortalLike {
+            val res = PortalLike()
+            res.id = dblike.id
+            res.inserted_date = dblike.inserted_date
+            res.updated_date = dblike.updated_date
+            res.username = IngressUser.parse(DbIngressUser.getByName(dbIngressUsers, dblike.username!!))
+            // TODO: Portal?
+            return res
+        }
+
+        fun parseAll(dbIngressUser: List<DbIngressUser>, dbLikes: List<DbPortalLike>): List<PortalLike> {
+            val res = mutableListOf<PortalLike>()
+            dbLikes.forEach {
+                res.add(parse(dbIngressUser, it))
+            }
+            return res
+        }
     }
 }
 
@@ -245,5 +276,27 @@ data class PortalReport(
             }
             return res
         }
+
+        private fun parse(dbIngressUserList: List<DbIngressUser>, it: DbPortalReport): PortalReport {
+            val res = PortalReport()
+            res.id = it.id
+            res.portal = null
+            res.description = it.description
+            res.username = IngressUser.parse(DbIngressUser.getByName(dbIngressUserList, it.username!!))
+            res.inserted_date = it.inserted_date
+            res.updated_date = it.updated_date
+
+            return res
+        }
+
+        fun parseAll(dbIngressUserList: List<DbIngressUser>, dbReports: List<DbPortalReport>): List<PortalReport> {
+            val res = mutableListOf<PortalReport>()
+            dbReports.forEach {
+                res.add(parse(dbIngressUserList, it))
+            }
+
+            return res
+        }
+
     }
 }

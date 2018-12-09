@@ -14,6 +14,7 @@ import org.json.JSONException
 import java.io.IOException
 import android.content.Intent
 import android.content.ContentProviderOperation
+import android.util.Log
 import ir.mrahimy.ingress.portal.dbmodel.*
 import org.json.JSONObject
 
@@ -29,7 +30,7 @@ import org.json.JSONObject
  */
 class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Boolean, allowParallelSyncs: Boolean = false) : AbstractThreadedSyncAdapter(context, autoInitialize, allowParallelSyncs) {
     private val contentResolver: ContentResolver = context.contentResolver
-
+    //private
     override fun onPerformSync(account: Account, bundle: Bundle, s: String, contentProviderClient: ContentProviderClient, syncResult: SyncResult) {
         sync(syncResult)
 
@@ -38,9 +39,10 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
     }
 
     private fun sync(syncResult: SyncResult) {
-        try {
+        Log.d(TAG, "sync started")
+        /*try {*/
             syncPortals(syncResult)
-        } catch (ex: IOException) {
+        /*} catch (ex: IOException) {
             Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
@@ -52,7 +54,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         } catch (ex: OperationApplicationException) {
             Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
-        }
+        }*/
 
         try {
             syncImageUrls(syncResult)
@@ -169,7 +171,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncPortalReport(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortalReport>()
-        PortalRestClient.get(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -263,7 +265,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncPortalLocation(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortalLocation>()
-        PortalRestClient.get(PortalContract.PATH_portal_location, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_portal_location, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -357,7 +359,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncImages(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortalImage>()
-        PortalRestClient.get(PortalContract.PATH_portal_image, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_portal_image, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -446,7 +448,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncLikes(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortalLike>()
-        PortalRestClient.get(PortalContract.PATH_portal_like, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_portal_like, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -535,7 +537,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncPortalJuncLoc(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortalJuncLocation>()
-        PortalRestClient.get(PortalContract.PATH_portal_junc_location, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_portal_junc_location, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -624,7 +626,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncIngressUser(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbIngressUser>()
-        PortalRestClient.get(PortalContract.PATH_Ingress_User, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_Ingress_User, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -709,7 +711,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncImageUrls(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbImageUrl>()
-        PortalRestClient.get(PortalContract.PATH_IMAGE_URLS, RequestParams(), object : JsonHttpResponseHandler() {
+        PortalRestClient.getSync(PortalContract.PATH_IMAGE_URLS, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("syncACTIONS: $response")
@@ -794,10 +796,11 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun syncPortals(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortal>()
-        PortalRestClient.get(PortalContract.PATH_PORTALS, RequestParams(), object : JsonHttpResponseHandler() {
+        Timber.d("$TAG, syncPortals")
+        PortalRestClient.getSync(PortalContract.PATH_PORTALS, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                Log.d(TAG, response.toString())
                 for (i in 0 until response!!.length()) {
                     val portal = DbPortal.parse(response.optJSONObject(i))
                     nets[portal.id!!] = portal
@@ -894,7 +897,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalReport.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalReport.COL_updated_date, local.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -917,7 +920,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalLocation.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalLocation.COL_updated_date, local.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -938,7 +941,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalImage.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalImage.COL_updated_date, local.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_portal_image, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_portal_image, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -959,7 +962,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalLike.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalLike.COL_updated_date, local.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_portal_like, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_portal_like, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -980,7 +983,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalJuncLocation.COL_inserted_date, localPortalJuncLocation.inserted_date)
         params.add(PortalContract.PortalJuncLocation.COL_updated_date, localPortalJuncLocation.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_portal_junc_location, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_portal_junc_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -1000,7 +1003,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.IngressUser.COL_inserted_date, localIngressUser.inserted_date)
         params.add(PortalContract.IngressUser.COL_updated_date, localIngressUser.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_Ingress_User, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_Ingress_User, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -1020,7 +1023,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.ImageUrl.COL_inserted_date, imageUrl.inserted_date)
         params.add(PortalContract.ImageUrl.COL_updated_date, imageUrl.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_IMAGE_URLS, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_IMAGE_URLS, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -1042,7 +1045,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.Portal.COL_inserted_date, localPortal.inserted_date)
         params.add(PortalContract.Portal.COL_updated_date, localPortal.updated_date)
 
-        PortalRestClient.post(PortalContract.PATH_PORTALS, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.postSync(PortalContract.PATH_PORTALS, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 Timber.d("$TAG, $response")
@@ -1059,6 +1062,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         private val TAG = SyncAdapter::class.java.simpleName
         val SYNC_FINISHED = "SYNC_FINISHED"
         fun performSync() {
+            Timber.d("SyncAdapter: inside performSync")
             val b = Bundle()
             b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
             b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)

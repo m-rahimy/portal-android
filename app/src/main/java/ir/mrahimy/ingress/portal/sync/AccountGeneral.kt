@@ -5,18 +5,19 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Bundle
+import timber.log.Timber
 
 object AccountGeneral {
     /**
      * This is the type of account we are using. i.e. we can specify our app or apps
      * to have different types, such as 'read-only', 'sync-only', & 'admin'.
      */
-    private val ACCOUNT_TYPE = "ir.mrahimy.ingress.portal"
+    private val ACCOUNT_TYPE = "ir.mrahimy.ingress.portal.syncaccount"
 
     /**
      * This is the name that appears in the Android 'Accounts' settings.
      */
-    private val ACCOUNT_NAME = "Sync Portals"
+    private val ACCOUNT_NAME = "Portal Sync"
 
 
     /**
@@ -58,6 +59,7 @@ object AccountGeneral {
 
         // Force a sync if the account was just created
         if (created) {
+            Timber.d("SyncAdapter: performSync")
             SyncAdapter.performSync()
         }
     }

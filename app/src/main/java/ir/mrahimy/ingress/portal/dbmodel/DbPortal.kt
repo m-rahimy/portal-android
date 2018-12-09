@@ -1,5 +1,6 @@
 package ir.mrahimy.ingress.portal.dbmodel
 
+import android.database.Cursor
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import org.json.JSONArray
 import org.json.JSONObject
@@ -31,6 +32,42 @@ data class DbPortal(
             }
             return res
         }
+
+        fun parse(cursor: Cursor): DbPortal {
+            val portal = DbPortal()
+            portal.id = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_id))
+            portal.title = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_title))
+            portal.description = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_description))
+            portal.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_uploader))
+            portal.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_inserted_date))
+            portal.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.Portal.COL_updated_date))
+            return portal
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortal> {
+            val res = mutableListOf<DbPortal>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortal>, id: String): DbPortal {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortal {
+            return getByID(parseAll(c), id)
+        }
+
+        fun getByUploader(list: List<DbPortal>, upName: String): List<DbPortal> {
+            return list.filter { it.uploader == upName }
+        }
+
+        fun getByUploader(c: Cursor, id: String): List<DbPortal> {
+            return getByUploader(parseAll(c), id)
+        }
     }
 }
 
@@ -57,6 +94,33 @@ data class DbIngressUser(
             }
             return res
         }
+
+        fun parse(cursor: Cursor): DbIngressUser {
+            val res = DbIngressUser()
+            res.name = cursor.getString(cursor.getColumnIndex(PortalContract.IngressUser.COL_name))
+            res.email = cursor.getString(cursor.getColumnIndex(PortalContract.IngressUser.COL_email))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.IngressUser.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.IngressUser.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbIngressUser> {
+            val res = mutableListOf<DbIngressUser>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByName(list: List<DbIngressUser>, name: String): DbIngressUser {
+            return list.filter { it.name == name }[0]
+        }
+
+        fun getByName(c: Cursor, name: String): DbIngressUser {
+            return getByName(parseAll(c), name)
+        }
+
     }
 }
 
@@ -84,6 +148,41 @@ data class DbImageUrl(
 
             return res
         }
+
+        fun parse(cursor: Cursor): DbImageUrl {
+            val res = DbImageUrl()
+            res.url = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_url))
+            res.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_uploader))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbImageUrl> {
+            val res = mutableListOf<DbImageUrl>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByUrl(list: List<DbImageUrl>, url: String): DbImageUrl {
+            return list.filter { it.url == url }[0]
+        }
+
+        fun getByUrl(c: Cursor, url: String): DbImageUrl {
+            return getByUrl(parseAll(c), url)
+        }
+
+        fun getByUploader(list: List<DbImageUrl>, uploaderName: String): List<DbImageUrl> {
+            return list.filter { it.uploader == uploaderName }
+        }
+
+        fun getByUploader(c: Cursor, uploaderName: String): List<DbImageUrl> {
+            return getByUploader(parseAll(c), uploaderName)
+        }
+
     }
 }
 
@@ -114,8 +213,45 @@ data class DbPortalLocation(
             }
             return res
         }
+
+        fun parse(cursor: Cursor): DbPortalLocation {
+            val res = DbPortalLocation()
+            res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_id))
+            res.lat = cursor.getDouble(cursor.getColumnIndex(PortalContract.PortalLocation.COL_lat))
+            res.lon = cursor.getDouble(cursor.getColumnIndex(PortalContract.PortalLocation.COL_lon))
+            res.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_uploader_name))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortalLocation> {
+            val res = mutableListOf<DbPortalLocation>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortalLocation>, id: String): DbPortalLocation {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortalLocation {
+            return getByID(parseAll(c), id)
+        }
+
+        fun getByUploader(list: List<DbPortalLocation>, uploader: String): List<DbPortalLocation> {
+            return list.filter { it.uploader == uploader }
+        }
+
+        fun getByUploader(c: Cursor, id: String): List<DbPortalLocation> {
+            return getByUploader(parseAll(c), id)
+        }
     }
 }
+
 //
 data class DbPortalJuncLocation(
         var id: String? = "",
@@ -142,6 +278,49 @@ data class DbPortalJuncLocation(
                 res.add(parse(jsonArray.optJSONObject(it)))
             }
             return res
+        }
+
+        fun parse(cursor: Cursor): DbPortalJuncLocation {
+            val res = DbPortalJuncLocation()
+            res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_id))
+            res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_portalID))
+            res.location_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_locationID))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortalJuncLocation> {
+            val res = mutableListOf<DbPortalJuncLocation>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortalJuncLocation>, id: String): DbPortalJuncLocation {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortalJuncLocation {
+            return parseAll(c).filter { it.id == id }[0]
+        }
+
+        fun getByPortal(list: List<DbPortalJuncLocation>, id: String): List<DbPortalJuncLocation> {
+            return list.filter { it.portal_id == id }
+        }
+
+        fun getByPortal(c: Cursor, id: String): List<DbPortalJuncLocation> {
+            return getByPortal(parseAll(c), id)
+        }
+
+        fun getByLocation(list: List<DbPortalJuncLocation>, id: String): List<DbPortalJuncLocation> {
+            return list.filter { it.location_id == id }
+        }
+
+        fun getByLocation(c: Cursor, id: String): List<DbPortalJuncLocation> {
+            return getByLocation(parseAll(c), id)
         }
     }
 }
@@ -171,6 +350,49 @@ data class DbPortalLike(
             }
             return res
         }
+
+        fun parse(cursor: Cursor): DbPortalLike {
+            val res = DbPortalLike()
+            res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_id))
+            res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_portalID))
+            res.username = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_username))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLike.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortalLike> {
+            val res = mutableListOf<DbPortalLike>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortalLike>, id: String): DbPortalLike {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortalLike {
+            return getByID(parseAll(c), id)
+        }
+
+        fun getByPortalID(list: List<DbPortalLike>, id: String): List<DbPortalLike> {
+            return list.filter { it.portal_id == id }
+        }
+
+        fun getByPortalID(c: Cursor, id: String): List<DbPortalLike> {
+            return getByPortalID(parseAll(c), id)
+        }
+
+        fun getByUser(list: List<DbPortalLike>, user: String): List<DbPortalLike> {
+            return list.filter { it.username == user }
+        }
+
+        fun getByUser(c: Cursor, user: String): List<DbPortalLike> {
+            return getByUser(parseAll(c), user)
+        }
     }
 }
 
@@ -198,6 +420,50 @@ data class DbPortalImage(
                 res.add(parse(jsonArray.optJSONObject(it)))
             }
             return res
+        }
+
+
+        fun parse(cursor: Cursor): DbPortalImage {
+            val res = DbPortalImage()
+            res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalImage.COL_id))
+            res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalImage.COL_portalID))
+            res.url = cursor.getString(cursor.getColumnIndex(PortalContract.PortalImage.COL_url))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalImage.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalImage.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortalImage> {
+            val res = mutableListOf<DbPortalImage>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortalImage>, id: String): DbPortalImage {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortalImage {
+            return getByID(parseAll(c), id)
+        }
+
+        fun getByPortalID(list: List<DbPortalImage>, id: String): List<DbPortalImage> {
+            return list.filter { it.portal_id == id }
+        }
+
+        fun getByPortalID(c: Cursor, id: String): List<DbPortalImage> {
+            return getByPortalID(parseAll(c), id)
+        }
+
+        fun getByUrl(list: List<DbPortalImage>, url: String): List<DbPortalImage> {
+            return list.filter { it.url == url }
+        }
+
+        fun getByUrl(c: Cursor, url: String): List<DbPortalImage> {
+            return getByUrl(parseAll(c), url)
         }
     }
 }
@@ -229,6 +495,51 @@ data class DbPortalReport(
                 res.add(parse(jsonArray.optJSONObject(it)))
             }
             return res
+        }
+
+
+        fun parse(cursor: Cursor): DbPortalReport {
+            val res = DbPortalReport()
+            res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_id))
+            res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_portal_id))
+            res.description = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_portal_id))
+            res.username = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_username))
+            res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_inserted_date))
+            res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_updated_date))
+            return res
+        }
+
+        fun parseAll(cursor: Cursor): List<DbPortalReport> {
+            val res = mutableListOf<DbPortalReport>()
+            do {
+                res.add(parse(cursor))
+            } while (cursor.moveToNext())
+
+            return res
+        }
+
+        fun getByID(list: List<DbPortalReport>, id: String): DbPortalReport {
+            return list.filter { it.id == id }[0]
+        }
+
+        fun getByID(c: Cursor, id: String): DbPortalReport {
+            return getByID(parseAll(c), id)
+        }
+
+        fun getByPortalID(list: List<DbPortalReport>, id: String): List<DbPortalReport> {
+            return list.filter { it.portal_id == id }
+        }
+
+        fun getByPortalID(c: Cursor, id: String): List<DbPortalReport> {
+            return getByPortalID(parseAll(c), id)
+        }
+
+        fun getByUser(list: List<DbPortalReport>, user: String): List<DbPortalReport> {
+            return list.filter { it.username == user }
+        }
+
+        fun getByUser(c: Cursor, user: String): List<DbPortalReport> {
+            return getByPortalID(parseAll(c), user)
         }
     }
 
