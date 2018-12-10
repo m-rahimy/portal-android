@@ -506,7 +506,7 @@ data class DbPortalReport(
             val res = DbPortalReport()
             res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_id))
             res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_portal_id))
-            res.description = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_portal_id))
+            res.description = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_description))
             res.username = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_username))
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalReport.COL_updated_date))

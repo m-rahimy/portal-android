@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(),
             R.id.navigation_home -> {
                 //todo: portals list
 
-                PortalRestClient.getAsync(PortalContract.PATH_PORTALS, RequestParams(), object : JsonHttpResponseHandler() {
+                PortalRestClient.getAsync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                         super.onSuccess(statusCode, headers, response)
                         Timber.d("$TAG onSuccess, $response")

@@ -42,9 +42,9 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
     private fun sync(syncResult: SyncResult) {
         Log.d(TAG, "sync started")
-        /*try {*/
+        try {
         syncPortals(syncResult)
-        /*} catch (ex: IOException) {
+        } catch (ex: IOException) {
             Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
@@ -56,7 +56,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         } catch (ex: OperationApplicationException) {
             Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
-        }*/
+        }
 
         try {
             syncImageUrls(syncResult)
@@ -546,7 +546,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_junc_location, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                Timber.d("syncACTIONS: PATH_portal_junc_location $response")
                 for (i in 0 until response!!.length()) {
                     val juncLocation = DbPortalJuncLocation.parse(response.optJSONObject(i))
                     nets[juncLocation.id!!] = juncLocation

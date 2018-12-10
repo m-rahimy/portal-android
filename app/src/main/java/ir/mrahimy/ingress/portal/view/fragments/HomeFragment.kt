@@ -208,7 +208,7 @@ class HomeFragment : Fragment() {
 
     private fun populateListData() {
         portalList = databasePortalList.getFullData(activity!!.applicationContext.contentResolver)
-        Timber.d("$TAG FullData: $portalList")
+        Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
     }
 
     private inner class AllObserver public constructor()
