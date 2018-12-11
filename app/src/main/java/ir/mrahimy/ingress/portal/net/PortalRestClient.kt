@@ -6,10 +6,12 @@ import com.loopj.android.http.RequestParams
 import com.loopj.android.http.SyncHttpClient
 
 object PortalRestClient {
-    //private static final String BASE_URL = "https://api.oportalr.ir/v1/";
+    //private static final String BASE_URL = "http://api.oportalr.ir/v1/";
     private val BASE_URL = "http://192.168.1.150/portal/index.php/api/v1/portal/"
     private val syncClient = SyncHttpClient()
     private val asyncClient = AsyncHttpClient()
+    public val IMAGE_PATH_BASE = "http://www.oportalr.ir/"
+    public val IMAGE_PATH_EMPTY = "http://www.oportalr.ir/img/empty.png"
 
     init {
         asyncClient.addHeader("X-API-KEY", "b2fe82e0-3b13-11e8-b49c-18037385fd0e")

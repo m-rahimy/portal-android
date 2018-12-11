@@ -2,11 +2,9 @@ package ir.mrahimy.ingress.portal.util
 
 import android.content.ContentResolver
 import ir.mrahimy.ingress.portal.dbmodel.*
-import ir.mrahimy.ingress.portal.model.IngressUser
-import ir.mrahimy.ingress.portal.model.Portal
-import ir.mrahimy.ingress.portal.model.PortalLike
-import ir.mrahimy.ingress.portal.model.PortalReport
+import ir.mrahimy.ingress.portal.model.*
 import ir.mrahimy.ingress.portal.sync.PortalContract
+import timber.log.Timber
 
 fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     val res = mutableListOf<Portal>()
@@ -33,15 +31,26 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     cursor = contentResolver.query(PortalContract.PortalReport.CONTENT_URI, null, null, null, null)
     cursor.moveToFirst()
     val dbPortalReportList = DbPortalReport.parseAll(cursor)
+
+    cursor = contentResolver.query(PortalContract.ImageUrl.CONTENT_URI, null, null, null, null)
+    cursor.moveToFirst()
+    val dbImageUrlList = DbImageUrl.parseAll(cursor)
     cursor.close()
 
     this.forEachIndexed { t, it ->
-        val dbIngressUserI = DbIngressUser.getByName(dbIngressUserList, it.uploader!!)
-        val ingressUser = IngressUser.parse(dbIngressUserI)
+        Timber.d("FUllData: this is $it and index is $t")
+        val dbIngressUserInForEach = DbIngressUser.getByName(dbIngressUserList, it.uploader!!)
+        val ingressUser = IngressUser.parse(dbIngressUserInForEach)
         val dbLikes = DbPortalLike.getByPortalID(dbPortalLikeList, it.id!!)
         val likes = PortalLike.parseAll(dbIngressUserList, dbLikes)
         val dbReports = DbPortalReport.getByPortalID(dbPortalReportList, it.id!!)
         val reports = PortalReport.parseAll(dbIngressUserList, dbReports)
+
+        val dbPortalImages = DbPortalImage.getByPortalID(dbPortalImageList, it.id!!)
+        val portalImageList = mutableListOf<PortalImage>()
+        dbPortalImages.forEachIndexed { index, dbPortalImageL ->
+            portalImageList.add(PortalImage.parse(dbPortalImageL, dbImageUrlList, dbIngressUserList))
+        }
 
         val portal = Portal(
                 it.id,
@@ -49,7 +58,7 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
                 it.description,
                 ingressUser,
                 likes,
-                reports, null, null,
+                reports, portalImageList, null,
                 it.inserted_date,
                 it.updated_date)
 
@@ -58,6 +67,10 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
         }
 
         portal.reports?.forEach {
+            it.portal = portal
+        }
+
+        portal.imageUrls?.forEach {
             it.portal = portal
         }
 

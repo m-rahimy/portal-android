@@ -1,6 +1,7 @@
 package ir.mrahimy.ingress.portal.app
 
 import android.app.Application
+import com.facebook.drawee.backends.pipeline.Fresco
 import ir.mrahimy.ingress.portal.BuildConfig
 import timber.log.Timber
 
@@ -16,6 +17,8 @@ class App : Application(){
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        Fresco.initialize(this)
 
     }
 }

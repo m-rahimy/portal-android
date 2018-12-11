@@ -5,6 +5,7 @@ import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.toBoolean
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 
 data class DbPortal(
         var id: String? = "",
@@ -135,7 +136,7 @@ data class DbImageUrl(
         fun parse(jsonObject: JSONObject): DbImageUrl {
             val dbImageUrl = DbImageUrl()
             dbImageUrl.url = jsonObject.optString("url")
-            dbImageUrl.uploader = jsonObject.optString("uploader")
+            dbImageUrl.uploader = jsonObject.optString("uploader_name")
             dbImageUrl.inserted_date = jsonObject.optString("inserted_date")
             dbImageUrl.updated_date = jsonObject.optString("updated_date")
             return dbImageUrl
@@ -156,6 +157,7 @@ data class DbImageUrl(
             res.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_uploader))
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_updated_date))
+            Timber.d("FATALITY000: returning  $res")
             return res
         }
 

@@ -10,16 +10,19 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import ir.mrahimy.ingress.portal.R
+import ir.mrahimy.ingress.portal.adapter.PortalAdapter
 import ir.mrahimy.ingress.portal.dbmodel.DbPortal
 import ir.mrahimy.ingress.portal.model.Portal
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.getFullData
+import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 
 /**
@@ -191,6 +194,7 @@ class HomeFragment : Fragment() {
 
         var success = false
         try {
+            databasePortalList.clear()
             databasePortalList.addAll(DbPortal.parseAll(portalCursor))
             success = true
         } catch (e: CursorIndexOutOfBoundsException) {
@@ -209,6 +213,13 @@ class HomeFragment : Fragment() {
     private fun populateListData() {
         portalList = databasePortalList.getFullData(activity!!.applicationContext.contentResolver)
         Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
+        Timber.d("$TAG FullData portalList SIZE: ${portalList.size}")
+        Timber.d("$TAG FullData databasePortalList SIZE: ${databasePortalList.size}")
+        //TODO: load into rec view
+        home_rec_view.adapter = PortalAdapter(activity!!, portalList)
+        home_rec_view.layoutManager = LinearLayoutManager(activity)
+
+
     }
 
     private inner class AllObserver public constructor()

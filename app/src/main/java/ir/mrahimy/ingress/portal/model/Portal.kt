@@ -1,10 +1,9 @@
 package ir.mrahimy.ingress.portal.model
 
-import ir.mrahimy.ingress.portal.dbmodel.DbIngressUser
-import ir.mrahimy.ingress.portal.dbmodel.DbPortalLike
-import ir.mrahimy.ingress.portal.dbmodel.DbPortalReport
+import ir.mrahimy.ingress.portal.dbmodel.*
 import org.json.JSONArray
 import org.json.JSONObject
+import timber.log.Timber
 
 
 /**
@@ -17,7 +16,7 @@ data class Portal(
         var uploader: IngressUser? = IngressUser(),
         var likes: List<PortalLike>? = listOf(),
         var reports: List<PortalReport>? = listOf(),
-        var imageUrls: List<ImageUrl>? = listOf(),
+        var imageUrls: List<PortalImage>? = listOf(),
         var locations: List<PortalLocation>? = listOf(),
         var inserted_date: String? = "13971213124532",
         var updated_date: String? = "13971213124532"
@@ -31,7 +30,7 @@ data class Portal(
             portal.uploader = IngressUser.parse(jsonPortal.optJSONObject("uploader"))
             portal.likes = PortalLike.parseAll(jsonPortal.optJSONArray("likes"))
             portal.reports = PortalReport.parseAll(jsonPortal.optJSONArray("reports"))
-            portal.imageUrls = ImageUrl.parseAll(jsonPortal.optJSONArray("image_urls"))
+            portal.imageUrls = PortalImage.parseAll(jsonPortal.optJSONArray("portal_image"))
             portal.locations = PortalLocation.parseAll(jsonPortal.optJSONArray("locations"))
             portal.inserted_date = jsonPortal.optString("inserted_date")
             portal.updated_date = jsonPortal.optString("updated_date")
@@ -109,6 +108,16 @@ data class ImageUrl(
             (0 until imageJsonArray.length()).forEach {
                 res.add(ImageUrl.parse(imageJsonArray.optJSONObject(it)))
             }
+            return res
+        }
+
+        fun parse(dbImageUrl: DbImageUrl,dbIngressUserList: List<DbIngressUser>): ImageUrl {
+            val res = ImageUrl()
+            res.url = dbImageUrl.url
+            res.inserted_date = dbImageUrl.inserted_date
+            res.updated_date = dbImageUrl.updated_date
+            res.uploader = IngressUser.parse(DbIngressUser.getByName(dbIngressUserList, dbImageUrl.uploader!!))
+
             return res
         }
     }
@@ -246,6 +255,19 @@ data class PortalImage(
             (0 until jsonArray.length()).forEach {
                 res.add(parse(jsonArray.optJSONObject(it)))
             }
+            return res
+        }
+
+        fun parse(dbPortalImage: DbPortalImage, dbImageUrlList:List<DbImageUrl>, dbIngressUserList: List<DbIngressUser>): PortalImage {
+            val res = PortalImage()
+            res.id = dbPortalImage.id
+            Timber.d("FATALITY dbIngressUserList->0, ${dbIngressUserList[0].name}")
+            Timber.d("FATALITY dbPortalImage.url, ${dbPortalImage.url}")
+            val dbil = DbImageUrl.getByUrl(dbImageUrlList, dbPortalImage.url!!)
+            Timber.d("FATALITY dbil.url, ${dbil.url}")
+            Timber.d("FATALITY dbil.uploader, ${dbil.uploader}")
+            res.image = ImageUrl.parse(dbil,dbIngressUserList)
+
             return res
         }
     }
