@@ -1,6 +1,7 @@
 package ir.mrahimy.ingress.portal.model
 
 import ir.mrahimy.ingress.portal.dbmodel.*
+import ir.mrahimy.ingress.portal.util.toBoolean
 import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
@@ -196,7 +197,7 @@ data class PortalLike(
             res.id = jsonObject.optString("id")
             res.portal = Portal.parse(jsonObject.optJSONObject("portal"))
             res.username = IngressUser.parse(jsonObject.optJSONObject("user"))
-            res.like = jsonObject.optBoolean("_like")
+            res.like = jsonObject.optInt("_like").toBoolean()
             res.inserted_date = jsonObject.optString("inserted_date")
             res.updated_date = jsonObject.optString("updated_date")
             return res

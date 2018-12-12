@@ -342,7 +342,7 @@ data class DbPortalLike(
             res.id = jsonObject.optString("id")
             res.portal_id = jsonObject.optString("portal_id")
             res.username = jsonObject.optString("username")
-            res.like = jsonObject.optBoolean("_like")
+            res.like = jsonObject.optInt("_like").toBoolean()
             res.inserted_date = jsonObject.optString("inserted_date")
             res.updated_date = jsonObject.optString("updated_date")
             return res

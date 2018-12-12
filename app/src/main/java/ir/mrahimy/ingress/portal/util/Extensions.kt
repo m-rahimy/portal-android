@@ -83,3 +83,12 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
 
 fun Int.toBoolean() = this == 1
 fun Boolean.toInt() = if (this) 1 else 0
+
+fun List<PortalImage>.toParcelableArray(): Array<ParcelablePortalImage> {
+    val res = mutableListOf<ParcelablePortalImage>()
+    this.forEach {
+        res.add(ParcelablePortalImage(it))
+    }
+
+    return res.toTypedArray()
+}

@@ -22,6 +22,7 @@ import ir.mrahimy.ingress.portal.dbmodel.DbPortal
 import ir.mrahimy.ingress.portal.model.Portal
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.getFullData
+import ir.mrahimy.ingress.portal.view.MainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import timber.log.Timber
 
@@ -211,15 +212,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun populateListData() {
-        portalList = databasePortalList.getFullData(activity!!.applicationContext.contentResolver)
-        Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
-        Timber.d("$TAG FullData portalList SIZE: ${portalList.size}")
-        Timber.d("$TAG FullData databasePortalList SIZE: ${databasePortalList.size}")
-        //TODO: load into rec view
-        home_rec_view.adapter = PortalAdapter(activity!!, portalList)
-        home_rec_view.layoutManager = LinearLayoutManager(activity)
+        var mustShowSyncNeededDialog = false
+        try{
+            portalList = databasePortalList.getFullData(activity!!.applicationContext.contentResolver)
+            Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
+            Timber.d("$TAG FullData portalList SIZE: ${portalList.size}")
+            Timber.d("$TAG FullData databasePortalList SIZE: ${databasePortalList.size}")
+            //TODO: load into rec view
+            home_rec_view.adapter = PortalAdapter(activity!!, portalList)
+            home_rec_view.layoutManager = LinearLayoutManager(activity)
+        }catch (e:CursorIndexOutOfBoundsException){
+            e.printStackTrace()
+            mustShowSyncNeededDialog = true
+        }
 
+        if(mustShowSyncNeededDialog){
+            showSyncNeededDialog()
+        }
 
+    }
+
+    private fun showSyncNeededDialog() {
+        (activity as MainActivity).showSyncNeededDialog()
     }
 
     private inner class AllObserver public constructor()

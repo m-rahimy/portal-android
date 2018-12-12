@@ -1,18 +1,22 @@
 package ir.mrahimy.ingress.portal.view
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 import ir.mrahimy.ingress.portal.R
+import ir.mrahimy.ingress.portal.model.PortalImage
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import ir.mrahimy.ingress.portal.sync.AccountGeneral
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.sync.SyncAdapter
+import ir.mrahimy.ingress.portal.util.toParcelableArray
 import ir.mrahimy.ingress.portal.view.fragments.AddPortalFragment
 import ir.mrahimy.ingress.portal.view.fragments.HomeFragment
 import ir.mrahimy.ingress.portal.view.fragments.SettingsFragment
@@ -91,5 +95,15 @@ class MainActivity : AppCompatActivity(),
         val b = supportFragmentManager.beginTransaction()
         b.replace(R.id.main_fragment_layout, fragment)
         b.commit()
+    }
+
+    fun showSyncNeededDialog() {
+        AlertDialog.Builder(this).setTitle("sync").setMessage("sync?").create().show()
+    }
+
+    fun goToImagesActivity(imageUrls: List<PortalImage>?) {
+        val i = Intent(this, ImagesViewActivity::class.java)
+        i.putExtra("portal_images", imageUrls?.toParcelableArray())
+        startActivity(i)
     }
 }
