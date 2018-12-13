@@ -558,6 +558,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 var id = ""
                 var pid = ""
                 var lid = ""
+                var is_main = false
                 var inserted_date = "13971213124532"
                 var updated_date = "13971213124532"
 
@@ -569,6 +570,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     id = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_id))
                     pid = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_portalID))
                     lid = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_locationID))
+                    is_main = c.getInt(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_isMain)).toBoolean()
                     inserted_date = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_inserted_date))
                     updated_date = c.getString(c.getColumnIndex(PortalContract.PortalJuncLocation.COL_updated_date))
 
@@ -576,7 +578,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     if (networkPortalJuncLocation == null) {
                         //exist in local / not server
                         //send to server
-                        val local = DbPortalJuncLocation(id, pid, lid,
+                        val local = DbPortalJuncLocation(id, pid, lid, is_main,
                                 inserted_date, updated_date)
                         sendToServer(local)
                     } else {
@@ -589,13 +591,14 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                                     .withSelection(PortalContract.PortalJuncLocation.COL_id + "='" + id + "'", null)
                                     .withValue(PortalContract.PortalJuncLocation.COL_portalID, networkPortalJuncLocation!!.portal_id)
                                     .withValue(PortalContract.PortalJuncLocation.COL_locationID, networkPortalJuncLocation!!.location_id)
+                                    .withValue(PortalContract.PortalJuncLocation.COL_isMain, networkPortalJuncLocation!!.is_main)
                                     .withValue(PortalContract.PortalJuncLocation.COL_inserted_date, networkPortalJuncLocation!!.inserted_date)
                                     .withValue(PortalContract.PortalJuncLocation.COL_updated_date, networkPortalJuncLocation!!.updated_date)
                                     .build())
                             syncResult.stats.numUpdates++
                         } else if (networkPortalJuncLocation!!.updated_date?.compareTo(updated_date)!! < 0) {
                             // send to server
-                            val local = DbPortalJuncLocation(id, pid, lid,
+                            val local = DbPortalJuncLocation(id, pid, lid, is_main,
                                     inserted_date, updated_date)
                             sendToServer(local)
                         }
@@ -611,6 +614,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                             .withValue(PortalContract.PortalJuncLocation.COL_id, e.id)
                             .withValue(PortalContract.PortalJuncLocation.COL_portalID, e.portal_id)
                             .withValue(PortalContract.PortalJuncLocation.COL_locationID, e.location_id)
+                            .withValue(PortalContract.PortalJuncLocation.COL_isMain, e.is_main)
                             .withValue(PortalContract.PortalJuncLocation.COL_inserted_date, e.inserted_date)
                             .withValue(PortalContract.PortalJuncLocation.COL_updated_date, e.updated_date)
                             .build())
@@ -965,7 +969,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalLike.COL_id, local.id)
         params.add(PortalContract.PortalLike.COL_portalID, local.portal_id)
         params.add(PortalContract.PortalLike.COL_username, local.username)
-        params.add(PortalContract.PortalLike.COL_like, local.like!!.toInt().toString())
+        params.add(PortalContract.PortalLike.COL_like, local.like?.toInt().toString())
         params.add(PortalContract.PortalLike.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalLike.COL_updated_date, local.updated_date)
 
@@ -987,6 +991,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalJuncLocation.COL_id, localPortalJuncLocation.id)
         params.add(PortalContract.PortalJuncLocation.COL_portalID, localPortalJuncLocation.portal_id)
         params.add(PortalContract.PortalJuncLocation.COL_locationID, localPortalJuncLocation.location_id)
+        params.add(PortalContract.PortalJuncLocation.COL_isMain, localPortalJuncLocation.is_main?.toInt().toString())
         params.add(PortalContract.PortalJuncLocation.COL_inserted_date, localPortalJuncLocation.inserted_date)
         params.add(PortalContract.PortalJuncLocation.COL_updated_date, localPortalJuncLocation.updated_date)
 

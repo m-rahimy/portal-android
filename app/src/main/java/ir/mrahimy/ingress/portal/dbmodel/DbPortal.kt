@@ -260,6 +260,7 @@ data class DbPortalJuncLocation(
         var id: String? = "",
         var portal_id: String? = "",
         var location_id: String? = "",
+        var is_main: Boolean? =false,
         var inserted_date: String? = "",
         var updated_date: String? = ""
 ) {
@@ -270,6 +271,7 @@ data class DbPortalJuncLocation(
             res.id = jsonObject.optString("id")
             res.portal_id = jsonObject.optString("portal_id")
             res.location_id = jsonObject.optString("location_id")
+            res.is_main = jsonObject.optInt("location_id").toBoolean()
             res.inserted_date = jsonObject.optString("inserted_date")
             res.updated_date = jsonObject.optString("updated_date")
             return res
@@ -288,6 +290,7 @@ data class DbPortalJuncLocation(
             res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_id))
             res.portal_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_portalID))
             res.location_id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_locationID))
+            res.is_main = cursor.getInt(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_isMain)).toBoolean()
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalJuncLocation.COL_updated_date))
             return res

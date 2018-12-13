@@ -93,6 +93,7 @@ class DatabaseClient private constructor(c: Context) : SQLiteOpenHelper(c, DB_NA
                 PortalContract.PortalJuncLocation.COL_id + "] TEXT UNIQUE PRIMARY KEY,[" +
                 PortalContract.PortalJuncLocation.COL_portalID + "] TEXT,[" +
                 PortalContract.PortalJuncLocation.COL_locationID + "] TEXT,[" +
+                PortalContract.PortalJuncLocation.COL_isMain + "] NUMERIC,[" +
                 PortalContract.PortalJuncLocation.COL_inserted_date + "] TEXT,[" +
                 PortalContract.PortalJuncLocation.COL_updated_date + "] TEXT);")
     }
