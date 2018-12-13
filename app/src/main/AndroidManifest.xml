@@ -33,6 +33,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.ImagesViewActivity"
+            android:theme="@style/AppTheme.Translucent.Full" />
+
         <provider
             android:name=".sync.PortalProvider"
             android:authorities="ir.mrahimy.ingress.portal"
@@ -60,7 +64,6 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".view.ImagesViewActivity"></activity>
     </application>
 
 </manifest>
