@@ -18,7 +18,7 @@ data class Portal(
         var likes: List<PortalLike>? = listOf(),
         var reports: List<PortalReport>? = listOf(),
         var imageUrls: List<PortalImage>? = listOf(),
-        var locations: List<PortalLocation>? = listOf(),
+        var locations: List<PortalJuncLocation>? = listOf(),
         var inserted_date: String? = "13971213124532",
         var updated_date: String? = "13971213124532"
 ) {
@@ -32,7 +32,7 @@ data class Portal(
             portal.likes = PortalLike.parseAll(jsonPortal.optJSONArray("likes"))
             portal.reports = PortalReport.parseAll(jsonPortal.optJSONArray("reports"))
             portal.imageUrls = PortalImage.parseAll(jsonPortal.optJSONArray("portal_image"))
-            portal.locations = PortalLocation.parseAll(jsonPortal.optJSONArray("locations"))
+            portal.locations = PortalJuncLocation.parseAll(jsonPortal.optJSONArray("locations"))
             portal.inserted_date = jsonPortal.optString("inserted_date")
             portal.updated_date = jsonPortal.optString("updated_date")
             return portal
@@ -112,7 +112,7 @@ data class ImageUrl(
             return res
         }
 
-        fun parse(dbImageUrl: DbImageUrl,dbIngressUserList: List<DbIngressUser>): ImageUrl {
+        fun parse(dbImageUrl: DbImageUrl, dbIngressUserList: List<DbIngressUser>): ImageUrl {
             val res = ImageUrl()
             res.url = dbImageUrl.url
             res.inserted_date = dbImageUrl.inserted_date
@@ -152,6 +152,19 @@ data class PortalLocation(
             }
             return res
         }
+
+        fun parse(dbpl: DbPortalLocation, dbIngressUserList: List<DbIngressUser>): PortalLocation {
+            val res = PortalLocation()
+            res.id = dbpl.id
+            res.lat = dbpl.lat
+            res.lon = dbpl.lon
+            res.inserted_date = dbpl.inserted_date
+            res.updated_date = dbpl.updated_date
+            Timber.d("FATALITY_IOIO " + dbpl.uploader)
+            res.uploader = IngressUser.parse(DbIngressUser.getByName(dbIngressUserList, dbpl.uploader!!))
+
+            return res
+        }
     }
 }
 
@@ -178,6 +191,17 @@ data class PortalJuncLocation(
             (0 until jsonArray.length()).forEach {
                 res.add(parse(jsonArray.optJSONObject(it)))
             }
+            return res
+        }
+
+        fun parse(dbPJL: DbPortalJuncLocation, dbPlList: List<DbPortalLocation>,
+                  dbIngressUserList: List<DbIngressUser>): PortalJuncLocation {
+            val res = PortalJuncLocation()
+            res.id = dbPJL.id
+            val dbpl = DbPortalLocation.getByID(dbPlList, dbPJL.location_id!!)
+            Timber.d("FATALITY_IOIO_P $dbpl")
+            Timber.d("FATALITY_IOIO_P dbpl: "+ dbpl.id + " dbpjl: "+ dbPJL.location_id)
+            res.location = PortalLocation.parse(dbpl, dbIngressUserList)
             return res
         }
     }
@@ -259,7 +283,7 @@ data class PortalImage(
             return res
         }
 
-        fun parse(dbPortalImage: DbPortalImage, dbImageUrlList:List<DbImageUrl>, dbIngressUserList: List<DbIngressUser>): PortalImage {
+        fun parse(dbPortalImage: DbPortalImage, dbImageUrlList: List<DbImageUrl>, dbIngressUserList: List<DbIngressUser>): PortalImage {
             val res = PortalImage()
             res.id = dbPortalImage.id
             Timber.d("FATALITY dbIngressUserList->0, ${dbIngressUserList[0].name}")
@@ -267,7 +291,7 @@ data class PortalImage(
             val dbil = DbImageUrl.getByUrl(dbImageUrlList, dbPortalImage.url!!)
             Timber.d("FATALITY dbil.url, ${dbil.url}")
             Timber.d("FATALITY dbil.uploader, ${dbil.uploader}")
-            res.image = ImageUrl.parse(dbil,dbIngressUserList)
+            res.image = ImageUrl.parse(dbil, dbIngressUserList)
 
             return res
         }

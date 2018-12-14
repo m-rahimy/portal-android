@@ -1,8 +1,7 @@
-package ir.mrahimy.ingress.portal.util
+package ir.mrahimy.ingress.portal.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import ir.mrahimy.ingress.portal.model.PortalImage
 
 data class ParcelablePortalImage(
         var id: String? = "",

@@ -4,13 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ImagesViewActivity">
+    tools:context=".view.StaticImageActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/images_rec_view"
+    <ImageView
+        android:id="@+id/static_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        tools:listitem="@layout/portal_image_card" />
-
+        android:layout_margin="60dp" />
 </android.support.constraint.ConstraintLayout>

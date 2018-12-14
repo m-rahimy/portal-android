@@ -2,6 +2,7 @@ package ir.mrahimy.ingress.portal.app
 
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
+import ir.map.sdk_map.MapSDK
 import ir.mrahimy.ingress.portal.BuildConfig
 import timber.log.Timber
 
@@ -19,6 +20,7 @@ class App : Application(){
         }
 
         Fresco.initialize(this)
+        MapSDK.init(this)
 
     }
 }

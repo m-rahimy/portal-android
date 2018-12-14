@@ -32,19 +32,23 @@ class PortalAdapter(private val context: Context,
         holder.portalCardName.text = portal.title
         holder.portalCardDesc.text = portal.description
         //TODO: toggle like if liked by user
-        //TODO: put image
+        // put image
         val url = when (portal.imageUrls?.size) {
             0 -> PortalRestClient.IMAGE_PATH_EMPTY
             1 -> PortalRestClient.IMAGE_PATH_BASE + portal.imageUrls!![0].image?.url
             else -> PortalRestClient.IMAGE_PATH_EMPTY // TODO: find more liked images
         }
-
         holder.mainImage.setImageURI(Uri.parse(url))
         holder.mainImage.setOnClickListener {
             (context as MainActivity).goToImagesActivity(portal.imageUrls)
         }
-        val likes = portal.likes/*?.filter { it.like == true }*/?.size
+        val likes = portal.likes?.filter { it.like == true }?.size
         holder.portalCardLikes.text = likes.toString()
+
+        holder.portalCardPosButton.setOnClickListener {
+            //TODO:(context as MainActivity).goToLocationActivity(portal.locations)
+            (context as MainActivity).goToStaticLocationActivity(portal.locations)
+        }
 
     }
 

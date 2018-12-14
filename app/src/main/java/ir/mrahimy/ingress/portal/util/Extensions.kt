@@ -52,13 +52,20 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
             portalImageList.add(PortalImage.parse(dbPortalImageL, dbImageUrlList, dbIngressUserList))
         }
 
+        val dbPortalJuncLocations = DbPortalJuncLocation.getByPortal(dbPortalJuncLocationList, it.id!!)
+        val pjl_List = mutableListOf<PortalJuncLocation>()
+        dbPortalJuncLocations.forEachIndexed { index, item ->
+            //Timber.d("FATALITY_IOIO_LOOP "+ item.)
+            pjl_List.add(PortalJuncLocation.parse(item, dbPortalLocationList, dbIngressUserList))
+        }
+
         val portal = Portal(
                 it.id,
                 it.title,
                 it.description,
                 ingressUser,
                 likes,
-                reports, portalImageList, null,
+                reports, portalImageList, pjl_List,
                 it.inserted_date,
                 it.updated_date)
 
@@ -71,6 +78,10 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
         }
 
         portal.imageUrls?.forEach {
+            it.portal = portal
+        }
+
+        portal.locations?.forEach {
             it.portal = portal
         }
 
@@ -89,6 +100,13 @@ fun List<PortalImage>.toParcelableArray(): Array<ParcelablePortalImage> {
     this.forEach {
         res.add(ParcelablePortalImage(it))
     }
+    return res.toTypedArray()
+}
 
+fun List<PortalJuncLocation>.toParcelableArray(): Array<ParcelablePortalJuncLocation> {
+    val res = mutableListOf<ParcelablePortalJuncLocation>()
+    this.forEach {
+        res.add(ParcelablePortalJuncLocation(it))
+    }
     return res.toTypedArray()
 }

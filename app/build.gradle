@@ -47,10 +47,22 @@ dependencies {
     // Crashlytics
     //implementation('com.crashlytics.sdk.android:crashlytics:2.9.3') { transitive = true }
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.6@aar') {
-        transitive = true;
+        transitive = true
     }
 
     //Logging
     implementation 'com.jakewharton.timber:timber:4.6.0'
+
+    //map
+    implementation 'ir.map.sdk:sdk_common:2.0.0'
+    implementation 'ir.map.sdk:sdk_services:2.0.4'
+    implementation 'ir.map.sdk:sdk_map:2.0.4'
+    //map helpers
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    /*implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'*/
 
 }

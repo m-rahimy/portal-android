@@ -14,11 +14,7 @@ class DatabaseClient private constructor(c: Context) : SQLiteOpenHelper(c, DB_NA
     /**
      * Provide access to our database.
      */
-    val db: SQLiteDatabase
-
-    init {
-        this.db = writableDatabase
-    }
+    val db: SQLiteDatabase = writableDatabase
 
     override fun onCreate(db: SQLiteDatabase) {
         // Create any SQLite tables here

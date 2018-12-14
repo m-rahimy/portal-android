@@ -7,11 +7,14 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.model.PortalImage
+import ir.mrahimy.ingress.portal.model.PortalJuncLocation
+import ir.mrahimy.ingress.portal.model.PortalLocation
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import ir.mrahimy.ingress.portal.sync.AccountGeneral
 import ir.mrahimy.ingress.portal.sync.PortalContract
@@ -102,8 +105,23 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun goToImagesActivity(imageUrls: List<PortalImage>?) {
-        val i = Intent(this, ImagesViewActivity::class.java)
-        i.putExtra("portal_images", imageUrls?.toParcelableArray())
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            Toast.makeText(this, "No image", Toast.LENGTH_LONG).show()
+        } else {
+            val i = Intent(this, ImagesViewActivity::class.java)
+            i.putExtra("portal_images", imageUrls.toParcelableArray())
+            startActivity(i)
+        }
+    }
+
+    fun goToLocationActivity(locations: List<PortalJuncLocation>?) {
+        val i = Intent(this, LocationsActivity::class.java)
+        i.putExtra("portal_locations", locations?.toParcelableArray())
+        startActivity(i)
+    }
+    fun goToStaticLocationActivity(locations: List<PortalJuncLocation>?) {
+        val i = Intent(this, StaticImageActivity::class.java)
+        i.putExtra("portal_locations", locations?.toParcelableArray())
         startActivity(i)
     }
 }

@@ -32,7 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.ImagesViewActivity"
             android:theme="@style/AppTheme.Translucent.Full" />
@@ -64,6 +63,8 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <activity android:name=".view.LocationsActivity" />
+        <activity android:name=".view.StaticImageActivity"></activity>
     </application>
 
 </manifest>
