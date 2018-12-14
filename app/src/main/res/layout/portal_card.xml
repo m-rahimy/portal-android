@@ -13,7 +13,7 @@
         android:layout_height="120dp"
         android:background="#fff">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/portal_card_main_image"
             style="@style/imageviews"
             android:layout_width="64dp"

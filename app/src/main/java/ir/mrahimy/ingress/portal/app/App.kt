@@ -1,7 +1,8 @@
 package ir.mrahimy.ingress.portal.app
 
 import android.app.Application
-import com.facebook.drawee.backends.pipeline.Fresco
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import ir.map.sdk_map.MapSDK
 import ir.mrahimy.ingress.portal.BuildConfig
 import timber.log.Timber
@@ -19,7 +20,11 @@ class App : Application(){
             Timber.plant(Timber.DebugTree())
         }
 
-        Fresco.initialize(this)
+        if (!ImageLoader.getInstance().isInited) {
+            // Create global configuration and initialize ImageLoader with this config
+            val config = ImageLoaderConfiguration.Builder(this).build()
+            ImageLoader.getInstance().init(config)
+        }
         MapSDK.init(this)
 
     }

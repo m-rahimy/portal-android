@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.facebook.drawee.view.SimpleDraweeView
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.model.Portal
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import ir.mrahimy.ingress.portal.view.MainActivity
-import timber.log.Timber
+import com.nostra13.universalimageloader.core.ImageLoader
+
+
 
 class PortalAdapter(private val context: Context,
                     private val dataList: List<Portal>) :
@@ -38,10 +39,12 @@ class PortalAdapter(private val context: Context,
             1 -> PortalRestClient.IMAGE_PATH_BASE + portal.imageUrls!![0].image?.url
             else -> PortalRestClient.IMAGE_PATH_EMPTY // TODO: find more liked images
         }
-        holder.mainImage.setImageURI(Uri.parse(url))
+        val imageLoader = ImageLoader.getInstance() // Get singleton instance
+        imageLoader.displayImage(url, holder.mainImage)
         holder.mainImage.setOnClickListener {
             (context as MainActivity).goToImagesActivity(portal.imageUrls)
         }
+        ////////////////////////////image done
         val likes = portal.likes?.filter { it.like == true }?.size
         holder.portalCardLikes.text = likes.toString()
 
@@ -57,7 +60,7 @@ class PortalAdapter(private val context: Context,
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var mainImage = itemView.findViewById<SimpleDraweeView>(R.id.portal_card_main_image)
+        var mainImage = itemView.findViewById<ImageView>(R.id.portal_card_main_image)
         var portalCardImageCount = itemView.findViewById<TextView>(R.id.portal_card_image_count)
         var portalCardName = itemView.findViewById<TextView>(R.id.portal_card_name)
         var portalCardDesc = itemView.findViewById<TextView>(R.id.portal_card_desc)
