@@ -10,5 +10,5 @@
         android:id="@+id/static_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="60dp" />
+        android:layout_margin="1dp" />
 </android.support.constraint.ConstraintLayout>
