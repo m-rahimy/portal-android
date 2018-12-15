@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".view.LocationActivity">
 
-    <fragment
-        android:id="@+id/portal_loc_map"
-        class="ir.map.sdk_map.wrapper.SupportMaptexFragment"
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

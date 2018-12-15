@@ -8,7 +8,6 @@ import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.adapter.PortalImageAdapter
 import ir.mrahimy.ingress.portal.model.ParcelablePortalImage
 import kotlinx.android.synthetic.main.activity_images_view.*
-import timber.log.Timber
 
 class ImagesViewActivity : AppCompatActivity() {
 
@@ -23,7 +22,7 @@ class ImagesViewActivity : AppCompatActivity() {
         val images = intent?.extras?.getParcelableArray("portal_images")?.toList()
         val imList = mutableListOf<ParcelablePortalImage>()
         images?.forEach {
-            Timber.d("$TAG, $it")
+            //Timber.d("$TAG, $it")
             imList.add(it as ParcelablePortalImage)
             val i2 = it.copy()
             i2.image_url = "/img/z.png"

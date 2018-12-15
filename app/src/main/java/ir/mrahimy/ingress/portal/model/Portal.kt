@@ -1,10 +1,10 @@
 package ir.mrahimy.ingress.portal.model
 
+import android.util.Log
 import ir.mrahimy.ingress.portal.dbmodel.*
 import ir.mrahimy.ingress.portal.util.toBoolean
 import org.json.JSONArray
 import org.json.JSONObject
-import timber.log.Timber
 
 
 /**
@@ -160,7 +160,7 @@ data class PortalLocation(
             res.lon = dbpl.lon
             res.inserted_date = dbpl.inserted_date
             res.updated_date = dbpl.updated_date
-            Timber.d("FATALITY_IOIO " + dbpl.uploader)
+            Log.d("FATALITY_IOIO ",dbpl.uploader)
             res.uploader = IngressUser.parse(DbIngressUser.getByName(dbIngressUserList, dbpl.uploader!!))
 
             return res
@@ -199,8 +199,8 @@ data class PortalJuncLocation(
             val res = PortalJuncLocation()
             res.id = dbPJL.id
             val dbpl = DbPortalLocation.getByID(dbPlList, dbPJL.location_id!!)
-            Timber.d("FATALITY_IOIO_P $dbpl")
-            Timber.d("FATALITY_IOIO_P dbpl: "+ dbpl.id + " dbpjl: "+ dbPJL.location_id)
+            Log.d("FATALITY_IOIO_P"," $dbpl")
+            Log.d("FATALITY_IOIO_P dbpl: ",dbpl.id + " dbpjl: "+ dbPJL.location_id)
             res.location = PortalLocation.parse(dbpl, dbIngressUserList)
             return res
         }
@@ -286,11 +286,11 @@ data class PortalImage(
         fun parse(dbPortalImage: DbPortalImage, dbImageUrlList: List<DbImageUrl>, dbIngressUserList: List<DbIngressUser>): PortalImage {
             val res = PortalImage()
             res.id = dbPortalImage.id
-            Timber.d("FATALITY dbIngressUserList->0, ${dbIngressUserList[0].name}")
-            Timber.d("FATALITY dbPortalImage.url, ${dbPortalImage.url}")
+            Log.d("FATALITY dbIngressUserList->0,"," ${dbIngressUserList[0].name}")
+            Log.d("FATALITY dbPortalImage.url, ","${dbPortalImage.url}")
             val dbil = DbImageUrl.getByUrl(dbImageUrlList, dbPortalImage.url!!)
-            Timber.d("FATALITY dbil.url, ${dbil.url}")
-            Timber.d("FATALITY dbil.uploader, ${dbil.uploader}")
+            Log.d("FATALITY dbil.url,"," ${dbil.url}")
+            Log.d("FATALITY dbil.uploader,"," ${dbil.uploader}")
             res.image = ImageUrl.parse(dbil, dbIngressUserList)
 
             return res

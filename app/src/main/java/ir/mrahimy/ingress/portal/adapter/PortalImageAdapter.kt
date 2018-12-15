@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.nostra13.universalimageloader.core.ImageLoader
+import com.squareup.picasso.Picasso
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import ir.mrahimy.ingress.portal.model.ParcelablePortalImage
-import timber.log.Timber
 import ir.mrahimy.ingress.portal.view.ImagesViewActivity
 
 
@@ -35,13 +34,17 @@ class PortalImageAdapter(private val activity: ImagesViewActivity,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pImg = data?.get(position)
         val url = PortalRestClient.IMAGE_PATH_BASE + pImg?.image_url
-        val imageLoader = ImageLoader.getInstance() // Get singleton instance
-        imageLoader.displayImage(url, holder.portalImageCardImage)
+        Picasso.get()
+                .load(url)
+                //.resize(50, 50)
+                //.centerCrop()
+                .into(holder.portalImageCardImage)
+        //holder.portalImageCardImage.setImageURI(Uri.parse(url))
         holder.portalImageCardUsername.text = pImg?.image_uploader
     }
 
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val portalImageCardImage: ImageView = v.findViewById<ImageView>(R.id.portal_image_card_image)
+        val portalImageCardImage: ImageView = v.findViewById(R.id.portal_image_card_image)
         val portalImageCardUsername: TextView = v.findViewById(R.id.portal_image_card_username)
     }
 }

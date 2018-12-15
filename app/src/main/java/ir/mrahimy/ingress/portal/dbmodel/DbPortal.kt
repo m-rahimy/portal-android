@@ -1,11 +1,11 @@
 package ir.mrahimy.ingress.portal.dbmodel
 
 import android.database.Cursor
+import android.util.Log
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.toBoolean
 import org.json.JSONArray
 import org.json.JSONObject
-import timber.log.Timber
 
 data class DbPortal(
         var id: String? = "",
@@ -157,7 +157,7 @@ data class DbImageUrl(
             res.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_uploader))
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.ImageUrl.COL_updated_date))
-            Timber.d("FATALITY000: returning  $res")
+            Log.d("FATALITY000:", "returning  $res")
             return res
         }
 

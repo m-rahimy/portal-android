@@ -2,48 +2,53 @@ package ir.mrahimy.ingress.portal.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import ir.map.sdk_common.MaptexLatLng
-import ir.map.sdk_map.wrapper.MaptexCameraUpdateFactory
 import ir.mrahimy.ingress.portal.R
-import ir.map.sdk_map.wrapper.MaptexMap
-import ir.map.sdk_map.wrapper.SupportMaptexFragment
 import ir.mrahimy.ingress.portal.model.ParcelablePortalJuncLocation
+import kotlinx.android.synthetic.main.activity_location.*
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.ScaleBarOverlay
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 
 class LocationActivity : AppCompatActivity() {
 
-    private var mMap: MaptexMap? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
+        setupMap(intent?.extras?.getParcelable("location"))
 
-        setUpMapIfNeeded(intent?.extras
-                ?.getParcelable<ParcelablePortalJuncLocation>("location"))
     }
 
     override fun onResume() {
         super.onResume()
-        setUpMapIfNeeded(intent?.extras?.getParcelable<ParcelablePortalJuncLocation>("location"))
+        //setupMap(intent?.extras?.getParcelable("location"))
     }
 
-    private fun setUpMapIfNeeded(parcel: ParcelablePortalJuncLocation?) {
-        if (mMap == null) {
-            (supportFragmentManager.findFragmentById(R.id.portal_loc_map) as SupportMaptexFragment)
-                    .getMaptexAsync {
-                        mMap = it
-                        if (mMap != null) {
-                            setupMap(parcel?.lat, parcel?.lon)
-                        }
-                    }
 
-        }
-    }
+    private fun setupMap(portal: ParcelablePortalJuncLocation?) {
+        map.setMultiTouchControls(true)
+        map.controller.setZoom(13.0)
+        map.controller.setCenter(GeoPoint(portal?.lat!!, portal?.lon!!))
 
-    private fun setupMap(lat: Double?, lon: Double?) {
-        mMap?.moveCamera(MaptexCameraUpdateFactory.newLatLngZoom(
-                MaptexLatLng(lat!!, lon!!), 12.0f
-        ))
+        //user loc
+        val loc = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
+        loc.enableMyLocation()
+        map.overlays.add(loc)
+
+        val scaleBar = ScaleBarOverlay(map)
+        scaleBar.setCentred(true)
+        val dm = resources.displayMetrics
+        scaleBar.setScaleBarOffset(dm.widthPixels / 2, 10)
+        map.overlays.add(scaleBar)
+
+        //item marker
+        val m = Marker(map)
+        m.position = GeoPoint(portal.lat!!, portal.lon!!)
+        m.icon = resources.getDrawable(R.mipmap.ic_launcher)
+        m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(m)
 
     }
 }

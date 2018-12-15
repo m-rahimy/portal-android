@@ -5,7 +5,7 @@ import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Bundle
-import timber.log.Timber
+import android.util.Log
 
 object AccountGeneral {
     /**
@@ -59,7 +59,7 @@ object AccountGeneral {
 
         // Force a sync if the account was just created
         if (created) {
-            Timber.d("SyncAdapter: performSync")
+            Log.d("SyncAdapter:"," performSync")
             SyncAdapter.performSync()
         }
     }

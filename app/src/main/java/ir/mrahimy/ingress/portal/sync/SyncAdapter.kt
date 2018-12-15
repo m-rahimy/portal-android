@@ -8,7 +8,6 @@ import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.Header
 import ir.mrahimy.ingress.portal.net.PortalRestClient
-import timber.log.Timber
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.IOException
@@ -45,128 +44,104 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         try {
         syncPortals(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncImageUrls(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
+            Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncIngressUser(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncPortalJuncLoc(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncLikes(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncImages(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncPortalLocation(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
 
         try {
             syncPortalReport(syncResult)
         } catch (ex: IOException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
         } catch (ex: JSONException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numParseExceptions++
         } catch (ex: RemoteException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         } catch (ex: OperationApplicationException) {
-            Timber.e("$TAG, Error synchronizing! $ex")
             syncResult.stats.numAuthExceptions++
         }
     }
@@ -176,7 +151,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                Log.d("syncACTIONS:"," $response")
                 for (i in 0 until response!!.length()) {
                     val element = DbPortalReport.parse(response.optJSONObject(i))
                     nets[element.id!!] = element
@@ -240,7 +215,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    Log.i(TAG, "Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.PortalReport.CONTENT_URI)
                             .withValue(PortalContract.PortalReport.COL_id, e.id)
                             .withValue(PortalContract.PortalReport.COL_portal_id, e.portal_id)
@@ -260,7 +235,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                Log.d(TAG, "$responseString")
             }
         })
     }
@@ -270,7 +245,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_location, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                Log.d("syncACTIONS:", "$response")
                 for (i in 0 until response!!.length()) {
                     val element = DbPortalLocation.parse(response.optJSONObject(i))
                     nets[element.id!!] = element
@@ -334,7 +309,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.PortalLocation.CONTENT_URI)
                             .withValue(PortalContract.PortalLocation.COL_id, e.id)
                             .withValue(PortalContract.PortalLocation.COL_lat, e.lat)
@@ -354,7 +329,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -364,7 +339,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_image, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                //Timber.d("syncACTIONS: $response")
                 for (i in 0 until response!!.length()) {
                     val element = DbPortalImage.parse(response.optJSONObject(i))
                     nets[element.id!!] = element
@@ -424,7 +399,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.PortalImage.CONTENT_URI)
                             .withValue(PortalContract.PortalImage.COL_id, e.id)
                             .withValue(PortalContract.PortalImage.COL_portalID, e.portal_id)
@@ -443,7 +418,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -453,7 +428,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_like, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                //Timber.d("syncACTIONS: $response")
                 for (i in 0 until response!!.length()) {
                     val element = DbPortalLike.parse(response.optJSONObject(i))
                     nets[element.id!!] = element
@@ -516,7 +491,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.PortalLike.CONTENT_URI)
                             .withValue(PortalContract.PortalLike.COL_id, e.id)
                             .withValue(PortalContract.PortalLike.COL_portalID, e.portal_id)
@@ -536,7 +511,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -546,7 +521,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_junc_location, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: PATH_portal_junc_location $response")
+                //Timber.d("syncACTIONS: PATH_portal_junc_location $response")
                 for (i in 0 until response!!.length()) {
                     val juncLocation = DbPortalJuncLocation.parse(response.optJSONObject(i))
                     nets[juncLocation.id!!] = juncLocation
@@ -609,7 +584,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.PortalJuncLocation.CONTENT_URI)
                             .withValue(PortalContract.PortalJuncLocation.COL_id, e.id)
                             .withValue(PortalContract.PortalJuncLocation.COL_portalID, e.portal_id)
@@ -629,7 +604,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -639,7 +614,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_Ingress_User, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                //Timber.d("syncACTIONS: $response")
                 for (i in 0 until response!!.length()) {
                     val ingressUser = DbIngressUser.parse(response.optJSONObject(i))
                     nets[ingressUser.name!!] = ingressUser
@@ -696,7 +671,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.IngressUser.CONTENT_URI)
                             .withValue(PortalContract.IngressUser.COL_name, e.name)
                             .withValue(PortalContract.IngressUser.COL_email, e.email)
@@ -714,7 +689,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -724,7 +699,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_IMAGE_URLS, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("syncACTIONS: $response")
+                //Timber.d("syncACTIONS: $response")
                 for (i in 0 until response!!.length()) {
                     val imageUrl = DbImageUrl.parse(response.optJSONObject(i))
                     nets[imageUrl.url!!] = imageUrl
@@ -781,7 +756,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.ImageUrl.CONTENT_URI)
                             .withValue(PortalContract.ImageUrl.COL_url, e.url)
                             .withValue(PortalContract.ImageUrl.COL_uploader, e.uploader)
@@ -799,14 +774,14 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
 
     private fun syncPortals(syncResult: SyncResult) {
         val nets = mutableMapOf<String, DbPortal>()
-        Timber.d("$TAG, syncPortals")
+        //Timber.d("$TAG, syncPortals")
         PortalRestClient.getSync(PortalContract.PATH_PORTALS, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
@@ -873,7 +848,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 c.close()
 
                 for (e in nets.values) {
-                    Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.Portal.CONTENT_URI)
                             .withValue(PortalContract.Portal.COL_id, e.id)
                             .withValue(PortalContract.Portal.COL_title, e.title)
@@ -893,7 +868,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -910,12 +885,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
 
@@ -933,12 +908,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -954,12 +929,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_portal_image, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -976,12 +951,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_portal_like, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -998,12 +973,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_portal_junc_location, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -1018,12 +993,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_Ingress_User, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -1038,12 +1013,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_IMAGE_URLS, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -1060,12 +1035,12 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.postSync(PortalContract.PATH_PORTALS, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                Timber.d("$TAG, $response")
+                //Timber.d("$TAG, $response")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                Timber.d("$TAG, $responseString")
+                //Timber.d("$TAG, $responseString")
             }
         })
     }
@@ -1074,7 +1049,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         private val TAG = SyncAdapter::class.java.simpleName
         val SYNC_FINISHED = "SYNC_FINISHED"
         fun performSync() {
-            Timber.d("SyncAdapter: inside performSync")
+            //Timber.d("SyncAdapter: inside performSync")
             val b = Bundle()
             b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
             b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)

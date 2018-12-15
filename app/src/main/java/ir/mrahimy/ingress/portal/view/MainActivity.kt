@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -25,7 +26,6 @@ import ir.mrahimy.ingress.portal.view.fragments.HomeFragment
 import ir.mrahimy.ingress.portal.view.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity(),
         HomeFragment.OnFragmentInteractionListener,
@@ -45,12 +45,12 @@ class MainActivity : AppCompatActivity(),
                 PortalRestClient.getAsync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                         super.onSuccess(statusCode, headers, response)
-                        Timber.d("$TAG onSuccess, $response")
+                        //Timber.d("$TAG onSuccess, $response")
                     }
 
                     override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                         super.onFailure(statusCode, headers, responseString, throwable)
-                        Timber.d("$TAG onFailure, $responseString")
+                        //Timber.d("$TAG onFailure, $responseString")
 
                     }
                 })
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.d("SyncAdapter: before createSyncAccount")
+        Log.d("SyncAdapter:", " before createSyncAccount")
 
         // Create your sync account
         AccountGeneral.createSyncAccount(this)
@@ -119,6 +119,7 @@ class MainActivity : AppCompatActivity(),
         i.putExtra("portal_locations", locations?.toParcelableArray())
         startActivity(i)
     }
+
     fun goToStaticLocationActivity(locations: List<PortalJuncLocation>?) {
         val i = Intent(this, StaticImageActivity::class.java)
         i.putExtra("portal_locations", locations?.toParcelableArray())

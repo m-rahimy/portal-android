@@ -22,7 +22,7 @@ class LocationsActivity : AppCompatActivity() {
             locations.add(i2)
         }
 
-        //todo: setup rec
+        //setup rec
         locations_rec_view.adapter = LocationsAdapter(this, locations)
         locations_rec_view.layoutManager = LinearLayoutManager(this)
     }

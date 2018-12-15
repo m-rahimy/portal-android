@@ -24,7 +24,6 @@ import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.getFullData
 import ir.mrahimy.ingress.portal.view.MainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
-import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -71,7 +70,7 @@ class HomeFragment : Fragment() {
                 PortalContract.Portal.CONTENT_URI, null, null, null, null
         )
         portalCursor?.moveToFirst()
-        Timber.d("$TAG cursor count :${portalCursor?.count}")
+        //Timber.d("$TAG cursor count :${portalCursor?.count}")
         portalCursor?.close()
     }
 
@@ -191,7 +190,7 @@ class HomeFragment : Fragment() {
                 PortalContract.Portal.CONTENT_URI, null, null,
                 null, null)!!
         portalCursor.moveToFirst()
-        Timber.d("$TAG cursor count :${portalCursor.count}")
+        //Timber.d("$TAG cursor count :${portalCursor.count}")
 
         var success = false
         try {
@@ -202,10 +201,10 @@ class HomeFragment : Fragment() {
             e.printStackTrace()
         }
 
-        Timber.d("$TAG, $databasePortalList")
+        //Timber.d("$TAG, $databasePortalList")
 
         portalCursor.moveToFirst()
-        Timber.d("$TAG cursor count :${portalCursor.count}")
+        //Timber.d("$TAG cursor count :${portalCursor.count}")
         assert(success)
         populateListData()
 
@@ -213,20 +212,20 @@ class HomeFragment : Fragment() {
 
     private fun populateListData() {
         var mustShowSyncNeededDialog = false
-        try{
+        try {
             portalList = databasePortalList.getFullData(activity!!.applicationContext.contentResolver)
-            Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
-            Timber.d("$TAG FullData portalList SIZE: ${portalList.size}")
-            Timber.d("$TAG FullData databasePortalList SIZE: ${databasePortalList.size}")
+            //Timber.d("$TAG FullData: ${portalList[0].reports!![0].description}")
+            //Timber.d("$TAG FullData portalList SIZE: ${portalList.size}")
+            //Timber.d("$TAG FullData databasePortalList SIZE: ${databasePortalList.size}")
             //TODO: load into rec view
             home_rec_view.adapter = PortalAdapter(activity!!, portalList)
             home_rec_view.layoutManager = LinearLayoutManager(activity)
-        }catch (e:CursorIndexOutOfBoundsException){
+        } catch (e: CursorIndexOutOfBoundsException) {
             e.printStackTrace()
             mustShowSyncNeededDialog = true
         }
 
-        if(mustShowSyncNeededDialog){
+        if (mustShowSyncNeededDialog) {
             showSyncNeededDialog()
         }
 
@@ -239,7 +238,7 @@ class HomeFragment : Fragment() {
     private inner class AllObserver public constructor()
         : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
-            Timber.d("$TAG, onChange")
+            //Timber.d("$TAG, onChange")
             refreshData()
         }
     }

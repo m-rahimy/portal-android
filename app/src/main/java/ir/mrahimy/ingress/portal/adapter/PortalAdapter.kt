@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.model.Portal
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import ir.mrahimy.ingress.portal.view.MainActivity
-import com.nostra13.universalimageloader.core.ImageLoader
-
-
 
 class PortalAdapter(private val context: Context,
                     private val dataList: List<Portal>) :
@@ -37,10 +35,16 @@ class PortalAdapter(private val context: Context,
         val url = when (portal.imageUrls?.size) {
             0 -> PortalRestClient.IMAGE_PATH_EMPTY
             1 -> PortalRestClient.IMAGE_PATH_BASE + portal.imageUrls!![0].image?.url
-            else -> PortalRestClient.IMAGE_PATH_EMPTY // TODO: find more liked images
+            // TODO: find images with more likes:
+            else -> PortalRestClient.IMAGE_PATH_BASE + portal.imageUrls!![0].image?.url
         }
-        val imageLoader = ImageLoader.getInstance() // Get singleton instance
-        imageLoader.displayImage(url, holder.mainImage)
+        Picasso.get()
+                .load(url)
+                .resize(50, 50)
+                .centerCrop()
+                .into(holder.mainImage)
+        //holder.mainImage.setImageURI(Uri.parse(url))
+
         holder.mainImage.setOnClickListener {
             (context as MainActivity).goToImagesActivity(portal.imageUrls)
         }

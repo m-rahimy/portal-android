@@ -4,7 +4,6 @@ import android.content.ContentResolver
 import ir.mrahimy.ingress.portal.dbmodel.*
 import ir.mrahimy.ingress.portal.model.*
 import ir.mrahimy.ingress.portal.sync.PortalContract
-import timber.log.Timber
 
 fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     val res = mutableListOf<Portal>()
@@ -38,7 +37,7 @@ fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     cursor.close()
 
     this.forEachIndexed { t, it ->
-        Timber.d("FUllData: this is $it and index is $t")
+        //Timber.d("FUllData: this is $it and index is $t")
         val dbIngressUserInForEach = DbIngressUser.getByName(dbIngressUserList, it.uploader!!)
         val ingressUser = IngressUser.parse(dbIngressUserInForEach)
         val dbLikes = DbPortalLike.getByPortalID(dbPortalLikeList, it.id!!)
