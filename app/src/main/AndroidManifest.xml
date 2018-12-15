@@ -36,6 +36,12 @@
             android:name=".view.ImagesViewActivity"
             android:theme="@style/AppTheme.Translucent.Full" />
 
+        <activity android:name=".view.LocationsActivity" />
+        <activity android:name=".view.StaticImageActivity" />
+        <activity
+            android:name=".view.LocationActivity"
+            android:theme="@style/AppTheme.Translucent.Full" />
+
         <provider
             android:name=".sync.PortalProvider"
             android:authorities="ir.mrahimy.ingress.portal"
@@ -63,8 +69,10 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".view.LocationsActivity" />
-        <activity android:name=".view.StaticImageActivity"></activity>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjQ2YTkyYmJlZDAwNjg0MjQ2OGI3OTQ1Y2Y0N2Q1NjE3ODJjNTFjYmE5ZDBhODYyN2EzNWMyMjE1NjIwM2VlZjczMTJjN2QyM2Q1MTAzNGI0In0.eyJhdWQiOiJteWF3ZXNvbWVhcHAiLCJqdGkiOiI0NmE5MmJiZWQwMDY4NDI0NjhiNzk0NWNmNDdkNTYxNzgyYzUxY2JhOWQwYTg2MjdhMzVjMjIxNTYyMDNlZWY3MzEyYzdkMjNkNTEwMzRiNCIsImlhdCI6MTU0NDM2MTYwMiwibmJmIjoxNTQ0MzYxNjAyLCJleHAiOjE1NDQzNjUyMDIsInN1YiI6IiIsInNjb3BlcyI6WyJiYXNpYyIsImVtYWlsIl19.Z1MPvs13h7ENHZz2mC0K0QjtAyMg95UAAZ4wl9SUaKQpHtcSU6S0Gxsl3ZwAN9Gh0Z5U8QvjAJnHtjmsLf0wgbpLMpFZSuoSzSj-357Zn9yACRoOzbwB_BH-BWfJEGulTg19imOR3vxgLFHrWCXvGSBowB8QkDjiAwAkkD_pPaLSVF9bkbst7tb2-E3B-PRv6nUCxXQaXKO97bxoEKwmJNpL92f_KMEBZvWo--VzJkWkd6CvGc9KR2as4EUP37qV-OHnN1yU6KwEUxRD-nOXSv40JoXyAxH-ib9md0NiDjw_QUZkda3NXK-UZCX22H1930gg1O0Q4bxlyjVGvwA2SQ" />
+
     </application>
 
 </manifest>

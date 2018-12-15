@@ -49,8 +49,8 @@ class PortalAdapter(private val context: Context,
         holder.portalCardLikes.text = likes.toString()
 
         holder.portalCardPosButton.setOnClickListener {
-            //TODO:(context as MainActivity).goToLocationActivity(portal.locations)
-            (context as MainActivity).goToStaticLocationActivity(portal.locations)
+            (context as MainActivity).goToLocationActivity(portal.locations)
+            //(context as MainActivity).goToStaticLocationActivity(portal.locations)
         }
 
     }

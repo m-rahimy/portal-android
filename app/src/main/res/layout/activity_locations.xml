@@ -6,25 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".view.LocationsActivity">
 
-    <!--<fragment-->
-    <!--android:id="@+id/myMapView"-->
-    <!--class="ir.map.sdk_map.wrapper.SupportMaptexFragment"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp" />-->
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/locations_rec_view"
         tools:listitem="@layout/portal_location_card" />
-
-    <ImageView
-        android:id="@+id/portal_j_location_card_static_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="12dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="match_parent"
