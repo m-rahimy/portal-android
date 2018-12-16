@@ -212,8 +212,8 @@ class AddPortalFragment : Fragment() {
                 val contentURI = data.data
                 try {
                     val bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, contentURI)
-                    val path = saveImage(bitmap)
-                    Toast.makeText(activity, "Image Saved!", Toast.LENGTH_SHORT).show()
+                    //val path = saveImage(bitmap)
+                    //Toast.makeText(activity, "Image Saved! PATH=$path", Toast.LENGTH_SHORT).show()
                     //TODO: upload
                     if (requestCode == GALLERY1) add_portal_image1.setImageBitmap(bitmap)
                     if (requestCode == GALLERY2) add_portal_image2.setImageBitmap(bitmap)
@@ -231,8 +231,8 @@ class AddPortalFragment : Fragment() {
             if (requestCode == CAMERA1) add_portal_image1.setImageBitmap(thumbnail)
             if (requestCode == CAMERA2) add_portal_image2.setImageBitmap(thumbnail)
             if (requestCode == CAMERA3) add_portal_image3.setImageBitmap(thumbnail)
-            saveImage(thumbnail)
-            Toast.makeText(activity, "Image Saved!", Toast.LENGTH_SHORT).show()
+            val path = saveImage(thumbnail)
+            Toast.makeText(activity, "Image Saved! $path", Toast.LENGTH_SHORT).show()
         }
     }
 
