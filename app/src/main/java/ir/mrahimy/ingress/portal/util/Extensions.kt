@@ -1,9 +1,18 @@
 package ir.mrahimy.ingress.portal.util
 
 import android.content.ContentResolver
+import android.content.Context
 import ir.mrahimy.ingress.portal.dbmodel.*
 import ir.mrahimy.ingress.portal.model.*
 import ir.mrahimy.ingress.portal.sync.PortalContract
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.ScaleBarOverlay
+import org.osmdroid.views.overlay.compass.CompassOverlay
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     val res = mutableListOf<Portal>()
@@ -108,4 +117,40 @@ fun List<PortalJuncLocation>.toParcelableArray(): Array<ParcelablePortalJuncLoca
         res.add(ParcelablePortalJuncLocation(it))
     }
     return res.toTypedArray()
+}
+
+fun MapView.simpleSetup(context: Context, center: GeoPoint, zoom: Double?,
+                        isRotationEnabled: Boolean,
+                        centerToSelfLocation: Boolean,
+                        isSelfLocEnabled: Boolean,
+                        isCompassEnabled: Boolean,
+                        scaleBarY: Int) {
+    this.setMultiTouchControls(true)
+    val zoom0 = zoom ?: 5.5
+    this.controller.setZoom(zoom0)
+    this.controller.setCenter(center)
+    if (isRotationEnabled) {
+        val rotation = RotationGestureOverlay(this)
+        rotation.isEnabled = true
+        this.overlays.add(rotation)
+    }
+
+    if (isSelfLocEnabled) {
+        val loc = MyLocationNewOverlay(GpsMyLocationProvider(context), this)
+        loc.enableMyLocation()
+        this.overlays.add(loc)
+        if (centerToSelfLocation/* && loc.myLocation != null*/)
+            this.controller.setCenter(loc.myLocation)
+    }
+
+    val scaleBar = ScaleBarOverlay(this)
+    scaleBar.setCentred(true)
+    val dm = resources.displayMetrics
+    scaleBar.setScaleBarOffset(dm.widthPixels / 2, scaleBarY)
+    this.overlays.add(scaleBar)
+    if (isCompassEnabled) {
+        val compass = CompassOverlay(context, InternalCompassOrientationProvider(context), this);
+        compass.enableCompass()
+        this.overlays.add(compass)
+    }
 }

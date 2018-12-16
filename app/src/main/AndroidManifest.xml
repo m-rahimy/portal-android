@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <application
         android:name=".app.App"
@@ -40,7 +42,6 @@
         <activity
             android:name=".view.ImagesViewActivity"
             android:theme="@style/AppTheme.Translucent.Full" />
-
         <activity android:name=".view.LocationsActivity" />
         <activity android:name=".view.StaticImageActivity" />
         <activity
@@ -73,6 +74,8 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
+        <activity android:name=".view.fragments.ChooseLocationActivity"></activity>
     </application>
 
 </manifest>

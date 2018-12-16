@@ -51,9 +51,16 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.karumi:dexter:5.0.0'
+
     //osm
     implementation "org.osmdroid:osmdroid-android:$osm_version"
     //implementation "org.osmdroid:osmdroid-wms:$osm_version"
     //implementation "org.osmdroid:osmdroid-mapsforge:$osm_version"
     //implementation "org.osmdroid:osmdroid-geopackage:$osm_version"
+    //implementation 'com.github.MKergall:osmbonuspack:6.5.2'
+
+    //gif
+    //implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+
 }
