@@ -1,7 +1,6 @@
 package ir.mrahimy.ingress.portal.view
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -26,13 +25,13 @@ class LocationsAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pjl = data[position]
-        holder.user.text = pjl.uploader
-        holder.image
+        holder.user.text = context.getString(R.string.loc_by_user, pjl.uploader)
+        //TODO: holder.image static
         holder.image.setOnClickListener {
             (context as LocationsActivity).goToLocationActivity(pjl)
         }
 
-        //TODO: get address by osm
+        holder.address.text = pjl.address
     }
 
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {

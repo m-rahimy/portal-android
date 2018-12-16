@@ -9,6 +9,7 @@ data class ParcelablePortalJuncLocation(
         var lat: Double? = 0.0,
         var lon: Double? = 0.0,
         var uploader: String? = "",
+        var address: String? = "",
         var inserted_date: String? = "",
         var updated_date: String? = ""
 ) : Parcelable {
@@ -17,6 +18,7 @@ data class ParcelablePortalJuncLocation(
             parcel.readString(),
             parcel.readValue(Double::class.java.classLoader) as? Double,
             parcel.readValue(Double::class.java.classLoader) as? Double,
+            parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString()) {
@@ -28,6 +30,7 @@ data class ParcelablePortalJuncLocation(
             inp.location?.lat,
             inp.location?.lon,
             inp.location?.uploader?.name,
+            inp.location?.address,
             inp.location?.inserted_date,
             inp.location?.updated_date
     )
@@ -38,6 +41,7 @@ data class ParcelablePortalJuncLocation(
         parcel.writeValue(lat)
         parcel.writeValue(lon)
         parcel.writeString(uploader)
+        parcel.writeString(address)
         parcel.writeString(inserted_date)
         parcel.writeString(updated_date)
     }

@@ -7,4 +7,5 @@
     <string name="hello_a_fragment">Hello home fragment</string>
     <string name="hello_b_fragment">Hello add fragment</string>
     <string name="hello_c_fragment">Hello sett fragment</string>
+    <string name="loc_by_user">location by %1$s</string>
 </resources>
