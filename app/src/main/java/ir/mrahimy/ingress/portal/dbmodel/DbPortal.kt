@@ -194,6 +194,7 @@ data class DbPortalLocation(
         var lat: Double? = 0.0,
         var lon: Double? = 0.0,
         var uploader: String? = "",
+        var address: String? = "",
         var inserted_date: String? = "13971213124532",
         var updated_date: String? = "13971213124532"
 ) {
@@ -204,6 +205,7 @@ data class DbPortalLocation(
             dbPortalLocation.lat = jsonObject.optDouble("lat")
             dbPortalLocation.lon = jsonObject.optDouble("lon")
             dbPortalLocation.uploader = jsonObject.optString("uploader_name")
+            dbPortalLocation.address = jsonObject.optString("address")
             dbPortalLocation.inserted_date = jsonObject.optString("inserted_date")
             dbPortalLocation.updated_date = jsonObject.optString("updated_date")
             return dbPortalLocation
@@ -222,6 +224,7 @@ data class DbPortalLocation(
             res.id = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_id))
             res.lat = cursor.getDouble(cursor.getColumnIndex(PortalContract.PortalLocation.COL_lat))
             res.lon = cursor.getDouble(cursor.getColumnIndex(PortalContract.PortalLocation.COL_lon))
+            res.address = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_address))
             res.uploader = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_uploader_name))
             res.inserted_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_inserted_date))
             res.updated_date = cursor.getString(cursor.getColumnIndex(PortalContract.PortalLocation.COL_updated_date))

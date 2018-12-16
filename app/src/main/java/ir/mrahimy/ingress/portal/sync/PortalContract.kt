@@ -18,7 +18,7 @@ object PortalContract {
     val PATH_portal_location = "portal_location"
     val PATH_portal_report = "portal_report"
     val DB_NAME = "portals_db.db3"
-    val DB_VERSION = 4
+    val DB_VERSION = 5
 
     object Portal {
         val TABLE_NAME = "portal"
@@ -107,6 +107,7 @@ object PortalContract {
         val COL_id = "id"
         val COL_lat = "lat"
         val COL_lon = "lon"
+        val COL_address = "address"
         val COL_uploader_name = "uploader_name"
         val COL_inserted_date = "inserted_date"
         val COL_updated_date = "updated_date"

@@ -42,7 +42,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
     private fun sync(syncResult: SyncResult) {
         Log.d(TAG, "sync started")
         try {
-        syncPortals(syncResult)
+            syncPortals(syncResult)
         } catch (ex: IOException) {
             Log.e(TAG, "Error synchronizing! $ex")
             syncResult.stats.numIoExceptions++
@@ -151,7 +151,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         PortalRestClient.getSync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
                 super.onSuccess(statusCode, headers, response)
-                Log.d("syncACTIONS:"," $response")
+                Log.d("syncACTIONS:", " $response")
                 for (i in 0 until response!!.length()) {
                     val element = DbPortalReport.parse(response.optJSONObject(i))
                     nets[element.id!!] = element
@@ -258,6 +258,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 var lat = 0.0
                 var lon = 0.0
                 var uploader_name = ""
+                var address = ""
                 var inserted_date = "13971213124532"
                 var updated_date = "13971213124532"
 
@@ -269,6 +270,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     id = c.getString(c.getColumnIndex(PortalContract.PortalLocation.COL_id))
                     lat = c.getDouble(c.getColumnIndex(PortalContract.PortalLocation.COL_lat))
                     lon = c.getDouble(c.getColumnIndex(PortalContract.PortalLocation.COL_lon))
+                    address = c.getString(c.getColumnIndex(PortalContract.PortalLocation.COL_address))
                     uploader_name = c.getString(c.getColumnIndex(PortalContract.PortalLocation.COL_uploader_name))
                     inserted_date = c.getString(c.getColumnIndex(PortalContract.PortalLocation.COL_inserted_date))
                     updated_date = c.getString(c.getColumnIndex(PortalContract.PortalLocation.COL_updated_date))
@@ -277,7 +279,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                     if (netPoLoc == null) {
                         //exist in local / not server
                         //send to server
-                        val local = DbPortalLocation(id, lat, lon, uploader_name,
+                        val local = DbPortalLocation(id, lat, lon, uploader_name, address,
                                 inserted_date, updated_date)
                         sendToServer(local)
                     } else {
@@ -290,6 +292,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                                     .withSelection(PortalContract.PortalLocation.COL_id + "='" + id + "'", null)
                                     .withValue(PortalContract.PortalLocation.COL_lat, netPoLoc!!.lat)
                                     .withValue(PortalContract.PortalLocation.COL_lon, netPoLoc!!.lon)
+                                    .withValue(PortalContract.PortalLocation.COL_address, netPoLoc!!.address)
                                     .withValue(PortalContract.PortalLocation.COL_uploader_name, netPoLoc!!.uploader)
                                     .withValue(PortalContract.PortalLocation.COL_inserted_date, netPoLoc!!.inserted_date)
                                     .withValue(PortalContract.PortalLocation.COL_updated_date, netPoLoc!!.updated_date)
@@ -298,7 +301,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                         } else if (netPoLoc!!.updated_date?.compareTo(updated_date)!! < 0) {
                             // local is newer
                             // send to server
-                            val local = DbPortalLocation(id, lat, lon, uploader_name,
+                            val local = DbPortalLocation(id, lat, lon, uploader_name, address,
                                     inserted_date, updated_date)
                             sendToServer(local)
                         }
@@ -314,6 +317,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                             .withValue(PortalContract.PortalLocation.COL_id, e.id)
                             .withValue(PortalContract.PortalLocation.COL_lat, e.lat)
                             .withValue(PortalContract.PortalLocation.COL_lon, e.lon)
+                            .withValue(PortalContract.PortalLocation.COL_address, e.address)
                             .withValue(PortalContract.PortalLocation.COL_uploader_name, e.uploader)
                             .withValue(PortalContract.PortalLocation.COL_inserted_date, e.inserted_date)
                             .withValue(PortalContract.PortalLocation.COL_updated_date, e.updated_date)
@@ -902,6 +906,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.PortalLocation.COL_lat, local.lat.toString())
         params.add(PortalContract.PortalLocation.COL_lon, local.lon.toString())
         params.add(PortalContract.PortalLocation.COL_uploader_name, local.uploader)
+        params.add(PortalContract.PortalLocation.COL_address, local.address)
         params.add(PortalContract.PortalLocation.COL_inserted_date, local.inserted_date)
         params.add(PortalContract.PortalLocation.COL_updated_date, local.updated_date)
 

@@ -57,6 +57,8 @@ class PortalAdapter(private val context: Context,
             //(context as MainActivity).goToStaticLocationActivity(portal.locations)
         }
 
+        holder.portalCardAddress.text = portal.locations?.get(0)?.location?.address ?: "بدون آدرس"
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -68,6 +70,7 @@ class PortalAdapter(private val context: Context,
         var portalCardImageCount = itemView.findViewById<TextView>(R.id.portal_card_image_count)
         var portalCardName = itemView.findViewById<TextView>(R.id.portal_card_name)
         var portalCardDesc = itemView.findViewById<TextView>(R.id.portal_card_desc)
+        var portalCardAddress = itemView.findViewById<TextView>(R.id.portal_card_address)
         var portalCardLikeButton = itemView.findViewById<Button>(R.id.portal_card_like_button)
         var portalCardPosButton = itemView.findViewById<Button>(R.id.portal_card_pos_button)
         var portalCardPicsButton = itemView.findViewById<Button>(R.id.portal_card_pics_button)

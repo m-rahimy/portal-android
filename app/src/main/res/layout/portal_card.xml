@@ -4,7 +4,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
+    android:layout_height="210dp"
     android:layout_margin="4dp"
     android:padding="4dp">
 
@@ -55,12 +55,27 @@
             app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/portal_card_name" />
+
+        <TextView
+            android:id="@+id/portal_card_address"
+            style="@style/textviews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="تهران میدان آرژانتین خیابان الوند"
+            android:textColor="#111"
+            app:layout_constraintTop_toBottomOf="@id/portal_card_desc"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
+            />
     </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:paddingBottom="12dp"
+        android:background="#0000"
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:id="@+id/portal_card_like_layout"
@@ -125,7 +140,7 @@
                 android:id="@+id/portal_card_pos_button"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="28.35, 45.68" />
+                android:text="مکان‌ها" />
 
             <TextView
                 android:layout_width="48dp"
@@ -149,7 +164,7 @@
                 android:id="@+id/portal_card_pics_button"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="+pics" />
+                android:text="افزودن تصویر" />
 
             <TextView
                 android:layout_width="48dp"

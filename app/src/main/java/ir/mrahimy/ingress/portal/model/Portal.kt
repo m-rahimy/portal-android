@@ -130,6 +130,7 @@ data class PortalLocation(
         var lat: Double? = 0.0,
         var lon: Double? = 0.0,
         var uploader: IngressUser? = IngressUser(),
+        var address: String? = "",
         var inserted_date: String? = "13971213124532",
         var updated_date: String? = "13971213124532"
 ) {
@@ -140,6 +141,7 @@ data class PortalLocation(
             pt.lat = jsonObject.optDouble("lat")
             pt.lon = jsonObject.optDouble("lon")
             pt.uploader = IngressUser.parse(jsonObject.optJSONObject("uploader"))
+            pt.address = jsonObject.optString("address")
             pt.inserted_date = jsonObject.optString("inserted_date")
             pt.updated_date = jsonObject.optString("updated_date")
             return pt
@@ -159,6 +161,7 @@ data class PortalLocation(
             res.lat = dbpl.lat
             res.lon = dbpl.lon
             res.inserted_date = dbpl.inserted_date
+            res.address = dbpl.address
             res.updated_date = dbpl.updated_date
             Log.d("FATALITY_IOIO ",dbpl.uploader)
             res.uploader = IngressUser.parse(DbIngressUser.getByName(dbIngressUserList, dbpl.uploader!!))

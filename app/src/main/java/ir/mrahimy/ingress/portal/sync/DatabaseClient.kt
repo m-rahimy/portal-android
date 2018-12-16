@@ -127,6 +127,7 @@ class DatabaseClient private constructor(c: Context) : SQLiteOpenHelper(c, DB_NA
                 PortalContract.PortalLocation.COL_id + "] TEXT UNIQUE PRIMARY KEY,[" +
                 PortalContract.PortalLocation.COL_lat + "] REAL,[" +
                 PortalContract.PortalLocation.COL_lon + "] REAL,[" +
+                PortalContract.PortalLocation.COL_address + "] TEXT,[" +
                 PortalContract.PortalLocation.COL_uploader_name + "] TEXT,[" +
                 PortalContract.PortalLocation.COL_inserted_date + "] TEXT,[" +
                 PortalContract.PortalLocation.COL_updated_date + "] TEXT);")
