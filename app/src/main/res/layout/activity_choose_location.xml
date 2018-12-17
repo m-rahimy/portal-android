@@ -9,25 +9,26 @@
     <org.osmdroid.views.MapView
         android:id="@+id/choose_location_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="48dp" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#444"
-        android:gravity="center"
+        android:background="#5fff"
+        android:gravity="center|left"
         android:padding="8dp"
+        android:layout_marginTop="48dp"
         android:text="Pan and Zoom To Choose Location"
-        android:textColor="#fff"
-        app:layout_constraintBottom_toTopOf="@id/choose_location_map" />
+        android:textColor="#111"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/choose_location_choose_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="48dp"
         android:text="CHOOSE"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/choose_location_map" />
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

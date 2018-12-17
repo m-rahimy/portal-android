@@ -23,7 +23,8 @@ class ChooseLocationActivity : AppCompatActivity() {
 
     val TAG = javaClass.simpleName
     val items = ArrayList<OverlayItem>()
-    var zoom:Double? = 5.5
+    var zoom: Double? = 5.5
+    lateinit var previousMarker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class ChooseLocationActivity : AppCompatActivity() {
         if (zoom == null) zoom = 5.5
         // center marker (same as snapp)
         SimpleSetupMap(lat, lon)
+        previousMarker = Marker(choose_location_map)
 
         //setupMapTouch(items)
 
@@ -70,20 +72,22 @@ class ChooseLocationActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val width = displayMetrics.widthPixels
-        val height = displayMetrics.heightPixels
+        val height = displayMetrics.heightPixels// for the top part of the app
 
         choose_location_map.addMapListener(object : MapListener {
             override fun onZoom(event: ZoomEvent?): Boolean {
-                val pt = choose_location_map.getProjection().fromPixels(width / 2, height / 2)
+                val pt = choose_location_map.getProjection()
+                        .fromPixels(width / 2, height / 2 - 18)
                 //--- Create Overlay
                 repositionMarker(pt)
-                Log.d(TAG, "zoomed to ${event?.zoomLevel}")
+                //Log.d(TAG, "zoomed to ${event?.zoomLevel}")
                 zoom = event?.zoomLevel!!
                 return false
             }
 
             override fun onScroll(event: ScrollEvent?): Boolean {
-                val pt = choose_location_map.getProjection().fromPixels(width / 2, height / 2)
+                val pt = choose_location_map.getProjection()
+                        .fromPixels(width / 2, height / 2 - 18)
                 //--- Create Overlay
                 repositionMarker(pt)
                 //Log.d(TAG, "scrolled to ${event?.}")
@@ -93,12 +97,14 @@ class ChooseLocationActivity : AppCompatActivity() {
     }
 
     private fun repositionMarker(pt: IGeoPoint?) {
-        val m = Marker(choose_location_map)
-        m.position = pt as GeoPoint?
-        m.icon = resources.getDrawable(R.mipmap.ic_launcher) //TODO change to portal animated
-        m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        choose_location_map.overlays.clear()
-        choose_location_map.overlays.add(m)
+        choose_location_map.overlays.remove(previousMarker)
+        previousMarker = Marker(choose_location_map)
+        previousMarker.position = pt as GeoPoint?
+        previousMarker.icon = resources.getDrawable(R.drawable.portal_red_trns_64)
+        previousMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        //choose_location_map.overlays.clear()
+
+        choose_location_map.overlays.add(previousMarker)
         items.clear()
         items.add(OverlayItem("", "", pt))
     }
@@ -107,7 +113,7 @@ class ChooseLocationActivity : AppCompatActivity() {
 
         val mReceive = object : MapEventsReceiver {
             override fun longPressHelper(p: GeoPoint?): Boolean {
-                Log.d(TAG, "longPressHelper")
+                //Log.d(TAG, "longPressHelper")
                 //setMarker(p, items)
                 return false
             }
