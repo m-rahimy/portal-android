@@ -1,17 +1,23 @@
 package ir.mrahimy.ingress.portal.net
 
+import android.util.Log
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.loopj.android.http.RequestParams
 import com.loopj.android.http.SyncHttpClient
+import ir.mrahimy.ingress.portal.view.fragments.AddPortalFragment.Companion.TAG
 
 object PortalRestClient {
-    //private static final String BASE_URL = "http://api.oportalr.ir/v1/";
-    private val BASE_URL = "http://192.168.1.150/portal/index.php/api/v1/portal/"
+    //private static final String BASE_URL = "http://api.oportalr.ir/";
+    private val BASE_URL = "http://192.168.1.150/portal/index.php/api/"
+    private val VERSION = "1"
+    private val PORTAL_BASE_URL = "${BASE_URL}v$VERSION/portal/"
+
     private val syncClient = SyncHttpClient()
     private val asyncClient = AsyncHttpClient()
     public val IMAGE_PATH_BASE = "http://www.oportalr.ir/"
     public val IMAGE_PATH_EMPTY = "http://www.oportalr.ir/img/empty.png"
+    public val IMAGE_UPLOAD_PATH = "${BASE_URL}v$VERSION/uploader/image"
 
     private val VAL_LAT = "VAL_LAT"
     private val VAL_LON = "VAL_LON"
@@ -23,19 +29,24 @@ object PortalRestClient {
     }
 
     fun getSync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
-        syncClient.get(getAbsoluteUrl(url), params, responseHandler)
+        syncClient.get(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
     fun postSync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
-        syncClient.post(getAbsoluteUrl(url), params, responseHandler)
+        syncClient.post(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
     fun getAsync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
-        asyncClient.get(getAbsoluteUrl(url), params, responseHandler)
+        asyncClient.get(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
     fun postAsync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
-        asyncClient.post(getAbsoluteUrl(url), params, responseHandler)
+        asyncClient.post(getPortalAbsoluteUrl(url), params, responseHandler)
+    }
+
+    fun uploadImage(params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
+        Log.d(TAG, IMAGE_UPLOAD_PATH)
+        asyncClient.post(IMAGE_UPLOAD_PATH, params, responseHandler)
     }
 
     fun getAddressForPoint(lat: String, lon: String, responseHandler: AsyncHttpResponseHandler) {
@@ -43,7 +54,7 @@ object PortalRestClient {
                 responseHandler)
     }
 
-    private fun getAbsoluteUrl(relativeUrl: String): String {
-        return BASE_URL + relativeUrl
+    private fun getPortalAbsoluteUrl(relativeUrl: String): String {
+        return PORTAL_BASE_URL + relativeUrl
     }
 }

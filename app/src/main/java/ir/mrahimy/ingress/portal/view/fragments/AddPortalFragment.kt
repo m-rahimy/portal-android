@@ -23,12 +23,14 @@ import cz.msebera.android.httpclient.Header
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.net.PortalRestClient
 import org.json.JSONObject
-import java.io.IOException
 import android.media.MediaScannerConnection
 import android.os.Environment
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import com.loopj.android.http.RequestParams
+import ir.mrahimy.ingress.portal.util.ImageFilePath
+import ir.mrahimy.ingress.portal.view.ChooseLocationActivity
+import java.io.*
+import java.lang.Exception
+import java.nio.ByteBuffer
 import java.util.*
 
 
@@ -49,6 +51,7 @@ class AddPortalFragment : Fragment() {
     lateinit var add_portal_image3: ImageView
     var zoom: Double? = 5.5
 
+    val portalImageIds = mutableListOf<String?>()
     var hasLatLon = false
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
@@ -180,6 +183,19 @@ class AddPortalFragment : Fragment() {
         val TAG = AddPortalFragment::class.java.simpleName
     }
 
+    private val imageUploadCallback = object : JsonHttpResponseHandler() {
+        override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
+            super.onSuccess(statusCode, headers, response)
+            Log.d(TAG, response.toString())
+            portalImageIds.add(response?.optString("filename"))
+        }
+
+        override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
+            super.onFailure(statusCode, headers, responseString, throwable)
+            Log.d(TAG, responseString)
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_CANCELED) {
@@ -204,6 +220,7 @@ class AddPortalFragment : Fragment() {
 
                 override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                     super.onFailure(statusCode, headers, responseString, throwable)
+                    Log.d(TAG, responseString)
                 }
             })
 
@@ -212,9 +229,27 @@ class AddPortalFragment : Fragment() {
                 val contentURI = data.data
                 try {
                     val bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, contentURI)
-                    //val path = saveImage(bitmap)
                     //Toast.makeText(activity, "Image Saved! PATH=$path", Toast.LENGTH_SHORT).show()
                     //TODO: upload
+                    val path = ImageFilePath.getPath(activity, contentURI)
+                    Log.d(TAG, "path is $path")
+                    val params = RequestParams()
+                    var success = false
+                    try {
+                        val file = File(path)
+                        Log.d(TAG, "file path is ${file.absolutePath}")
+                        params.put("image", file)
+                        success = true
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    Log.d(TAG, "success is $success")
+
+                    if (success) {
+                        PortalRestClient.uploadImage(params, imageUploadCallback)
+                    }
+
                     if (requestCode == GALLERY1) add_portal_image1.setImageBitmap(bitmap)
                     if (requestCode == GALLERY2) add_portal_image2.setImageBitmap(bitmap)
                     if (requestCode == GALLERY3) add_portal_image3.setImageBitmap(bitmap)
@@ -227,11 +262,28 @@ class AddPortalFragment : Fragment() {
 
         } else if (requestCode == CAMERA1 || requestCode == CAMERA2 || requestCode == CAMERA3) {
             val thumbnail = data?.extras?.get("data") as Bitmap
-            //TODO: upload
             if (requestCode == CAMERA1) add_portal_image1.setImageBitmap(thumbnail)
             if (requestCode == CAMERA2) add_portal_image2.setImageBitmap(thumbnail)
             if (requestCode == CAMERA3) add_portal_image3.setImageBitmap(thumbnail)
             val path = saveImage(thumbnail)
+            //TODO: upload
+            Log.d(TAG, "path is $path")
+            val params = RequestParams()
+            var success = false
+            try {
+                val file = File(path)
+                Log.d(TAG, "file path is ${file.absolutePath}")
+                params.put("image", file)
+                success = true
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            Log.d(TAG, "success is $success")
+
+            if (success) {
+                PortalRestClient.uploadImage(params, imageUploadCallback)
+            }
             Toast.makeText(activity, "Image Saved! $path", Toast.LENGTH_SHORT).show()
         }
     }
@@ -264,27 +316,28 @@ class AddPortalFragment : Fragment() {
 
     fun saveImage(myBitmap: Bitmap): String {
         val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val wallpaperDirectory = File(
-                Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY)
+                Environment.getExternalStorageDirectory().toString() +
+                        File.separator + IMAGE_DIRECTORY)
         // have the object build the directory structure, if needed.
+        Log.d(TAG, wallpaperDirectory.absolutePath)
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs()
         }
 
         try {
             val f = File(wallpaperDirectory, "${Calendar.getInstance()
-                    .getTimeInMillis()} .jpg")
+                    .timeInMillis}.jpg")
             f.createNewFile()
             val fo = FileOutputStream(f)
             fo.write(bytes.toByteArray())
             MediaScannerConnection.scanFile(activity,
-                    arrayOf(f.getPath()),
+                    arrayOf(f.path),
                     arrayOf("image/jpeg"), null)
             fo.close()
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
-
-            return f.getAbsolutePath()
+            Log.d(TAG, "File Saved " + f.absolutePath)
+            return f.absolutePath
         } catch (e1: IOException) {
             e1.printStackTrace()
         }

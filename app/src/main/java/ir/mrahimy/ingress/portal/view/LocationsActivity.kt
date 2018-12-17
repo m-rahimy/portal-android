@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import ir.mrahimy.ingress.portal.R
+import ir.mrahimy.ingress.portal.adapter.LocationsAdapter
 import ir.mrahimy.ingress.portal.model.ParcelablePortalJuncLocation
 import kotlinx.android.synthetic.main.activity_locations.*
 

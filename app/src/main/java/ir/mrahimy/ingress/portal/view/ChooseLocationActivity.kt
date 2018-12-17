@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.view.fragments
+package ir.mrahimy.ingress.portal.view
 
 import android.app.Activity
 import android.content.Intent

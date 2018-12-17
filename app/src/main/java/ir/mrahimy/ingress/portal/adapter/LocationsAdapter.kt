@@ -1,4 +1,4 @@
-package ir.mrahimy.ingress.portal.view
+package ir.mrahimy.ingress.portal.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.model.ParcelablePortalJuncLocation
+import ir.mrahimy.ingress.portal.view.LocationsActivity
 
 class LocationsAdapter(private val context: Context,
                        private val data: List<ParcelablePortalJuncLocation>) :

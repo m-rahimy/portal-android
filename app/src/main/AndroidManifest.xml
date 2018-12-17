@@ -75,7 +75,7 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity android:name=".view.fragments.ChooseLocationActivity"></activity>
+        <activity android:name=".view.ChooseLocationActivity"></activity>
     </application>
 
 </manifest>
