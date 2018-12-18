@@ -1,186 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="260dp"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@color/ingress_black"
     android:padding="4dp">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/ingress_black">
+    <ImageView
+        android:id="@+id/portal_card_main_image"
+        style="@style/imageviews"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_image_count" />
 
-        <ImageView
-            android:id="@+id/portal_card_main_image"
-            style="@style/imageviews"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/portal_card_image_count" />
-
-        <TextView
-            android:id="@+id/portal_card_image_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="5"
-            style="@style/ingress_text"
-            app:layout_constraintLeft_toLeftOf="@id/portal_card_main_image"
-            app:layout_constraintRight_toRightOf="@id/portal_card_main_image" />
-
-        <!-- TODO: touch to edit -->
-        <TextView
-            android:id="@+id/portal_card_name"
-            style="@style/ingress_text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:fontFamily="@font/coda"
-            android:focusable="true"
-            android:text="@string/portal_card_title_sample"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <!-- TODO: touch to edit -->
-        <TextView
-            android:id="@+id/portal_card_desc"
-            style="@style/ingress_text"
-            android:layout_width="0dp"
-            android:text="@string/portal_card_sample_description"
-            app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/portal_card_name" />
-
-        <TextView
-            android:id="@+id/portal_card_address"
-            style="@style/ingress_text"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="@string/portal_card_sample_address"
-            app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/portal_card_desc" />
-    </android.support.constraint.ConstraintLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/portal_card_image_count"
+        style="@style/ingress_text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="-18dp"
-        android:background="#0000"
-        android:paddingBottom="12dp">
+        android:gravity="center"
+        android:text="5"
+        app:layout_constraintLeft_toLeftOf="@id/portal_card_main_image"
+        app:layout_constraintRight_toRightOf="@id/portal_card_main_image" />
 
-        <LinearLayout
-            android:id="@+id/portal_card_like_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:background="#0000"
-            android:layout_marginRight="4dp"
-            android:orientation="vertical">
+    <!-- TODO: touch to edit -->
+    <TextView
+        android:id="@+id/portal_card_name"
+        style="@style/ingress_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/coda"
+        android:text="@string/portal_card_title_sample"
+        app:layout_constraintRight_toRightOf="parent" />
 
-            <Button
-                android:id="@+id/portal_card_like_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:text="L" />
+    <!-- TODO: touch to edit -->
+    <TextView
+        android:id="@+id/portal_card_desc"
+        style="@style/ingress_text"
+        android:layout_width="0dp"
+        android:text="@string/portal_card_sample_description"
+        app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_name" />
 
-            <TextView
-                android:id="@+id/portal_card_likes"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="L#" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/portal_card_address"
+        style="@style/ingress_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/portal_card_sample_address"
+        app:layout_constraintLeft_toRightOf="@id/portal_card_main_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_desc" />
 
-        <LinearLayout
-            android:id="@+id/portal_card_report_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/portal_card_like_layout"
-            android:orientation="vertical">
+    <Button
+        android:id="@+id/portal_card_pics_button"
+        style="@style/ingress_button_style_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_address" />
 
-            <Button
-                android:id="@+id/portal_card_report_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:text="R" />
+    <Button
+        android:id="@+id/portal_card_pos_button"
+        style="@style/ingress_button_style_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:text="@string/locations"
+        app:layout_constraintRight_toLeftOf="@id/portal_card_pics_button"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_address" />
 
-            <TextView
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="invisible" />
-        </LinearLayout>
+    <Button
+        android:id="@+id/portal_card_report_button"
+        style="@style/ingress_button_style_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:text="@string/report"
+        app:layout_constraintRight_toLeftOf="@id/portal_card_pos_button"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_address" />
 
-        <LinearLayout
-            android:id="@+id/portal_card_pos_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/portal_card_report_layout"
-            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/portal_card_pos_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ingress_button_style_def_big"
-                android:text="مکان‌ها" />
+    <ToggleButton
+        android:id="@+id/portal_card_like_button"
+        style="@style/ingress_button_style_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textOff="@string/like"
+        android:textOn="@string/liked"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/portal_card_address"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_main_image" />
 
-            <TextView
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/portal_card_pic_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/portal_card_pos_layout"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/portal_card_pics_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/ingress_button_style_def_big"
-                android:text="افزودن تصویر" />
-
-            <TextView
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="invisible" />
-        </LinearLayout>
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/portal_card_likes"
+        style="@style/ingress_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/portal_card_main_image"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_like_button" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/ingress_green" />
-</RelativeLayout>
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="38dp"
+        android:background="@color/ingress_green"
+        app:layout_constraintTop_toBottomOf="@id/portal_card_pics_button" />
 
+</android.support.constraint.ConstraintLayout>

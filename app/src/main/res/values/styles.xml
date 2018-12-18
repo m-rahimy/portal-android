@@ -32,6 +32,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/coda</item>
     </style>
+
     <style name="ingress_text_title" parent="ingress_text">
         <item name="android:textSize">@dimen/title_text_size</item>
     </style>
@@ -76,5 +77,10 @@
 
     <style name="ingress_button_style_def_big" parent="ingress_button_style_def">
         <item name="android:textSize">@dimen/button_text</item>
+    </style>
+
+    <style name="ingress_button_style_text" parent="ingress_button_style_def">
+        <item name="android:background">@drawable/ingress_button_style_text</item>
+        <item name="android:textColor">@color/bottom_nav_tabs</item>
     </style>
 </resources>

@@ -11,4 +11,9 @@
     <string name="portal_card_title_sample">میدان آزادی</string>
     <string name="portal_card_sample_description">توضیحات میدان آزادی که می‌تون=اند بلند باشد .توضیحات میدان آزادی که می‌تون=اند بلند باشد توضیحات میدان آزادی که می‌تون=اند بلند باشد</string>
     <string name="portal_card_sample_address">تهران میدان آرژانتین خیابان الوند</string>
+    <string name="add_image">افزودن تصویر</string>
+    <string name="report">Report</string>
+    <string name="locations">مکان‌ها</string>
+    <string name="like">Like</string>
+    <string name="liked">Liked</string>
 </resources>
