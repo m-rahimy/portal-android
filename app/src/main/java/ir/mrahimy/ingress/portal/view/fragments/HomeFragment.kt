@@ -165,6 +165,7 @@ class HomeFragment : Fragment() {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
         val TAG = "PortalList"
+        val TITLE: CharSequence? = "Portals List"
 
         /**
          * Use this factory method to create a new instance of

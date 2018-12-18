@@ -23,10 +23,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        style="@style/ingress_button_style_def_big"
         android:id="@+id/choose_location_choose_button"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
         android:layout_marginRight="16dp"
+        android:textColor="@color/ingress_black"
         android:layout_marginBottom="48dp"
         android:text="CHOOSE"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ingress_black"
     tools:context=".view.LocationsActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -11,12 +12,5 @@
         android:layout_height="match_parent"
         android:id="@+id/locations_rec_view"
         tools:listitem="@layout/portal_location_card" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="LOCATION LIST WITH STATIC IMAGE, CLICK TO SHOW  ON MAP"
-        android:textColor="#f00" />
 
 </android.support.constraint.ConstraintLayout>

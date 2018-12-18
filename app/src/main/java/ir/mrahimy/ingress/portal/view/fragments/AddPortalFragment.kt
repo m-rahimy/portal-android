@@ -181,6 +181,7 @@ class AddPortalFragment : Fragment() {
         val CODE_ADD_LOCATION = 1001
 
         val TAG = AddPortalFragment::class.java.simpleName
+        val TITLE: CharSequence? = "Suggesting Portals"
     }
 
     private val imageUploadCallback = object : JsonHttpResponseHandler() {

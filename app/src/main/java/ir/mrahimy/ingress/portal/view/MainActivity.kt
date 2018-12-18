@@ -40,30 +40,18 @@ class MainActivity : AppCompatActivity(),
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                //todo: portals list
-
-                PortalRestClient.getAsync(PortalContract.PATH_portal_report, RequestParams(), object : JsonHttpResponseHandler() {
-                    override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONArray?) {
-                        super.onSuccess(statusCode, headers, response)
-                        //Timber.d("$TAG onSuccess, $response")
-                    }
-
-                    override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
-                        super.onFailure(statusCode, headers, responseString, throwable)
-                        //Timber.d("$TAG onFailure, $responseString")
-
-                    }
-                })
-
                 goto(HomeFragment.newInstance("A", "B"))
+                title = HomeFragment.TITLE
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_add_portal -> {
                 goto(AddPortalFragment.newInstance("A", "B"))
+                title = AddPortalFragment.TITLE
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_settings -> {
                 goto(SettingsFragment.newInstance("A", "B"))
+                title = SettingsFragment.TITLE
                 return@OnNavigationItemSelectedListener true
             }
         }

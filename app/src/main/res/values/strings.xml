@@ -16,4 +16,7 @@
     <string name="locations">مکان‌ها</string>
     <string name="like">Like</string>
     <string name="liked">Liked</string>
+    <string name="choose_location">Choose Location</string>
+    <string name="images">تصاویر ارسالی:</string>
+    <string name="send">ارسال</string>
 </resources>
