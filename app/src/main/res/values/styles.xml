@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:titleTextStyle">@style/ActionBarTitle</item>-->
+        <!--<item name="android:actionBarStyle">@style/IngressActionBarStyle</item>-->
+        <!--<item name="actionBarStyle">@style/IngressActionBarStyle</item>-->
+        <!--<item name="android:subtitleTextStyle">@style/ActionBarSubtitle</item>-->
     </style>
 
     <style name="AppTheme.Translucent.Full" parent="Theme.AppCompat.Light.NoActionBar">
@@ -18,9 +22,18 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="textviews">
+    <style name="ingress_text">
         <item name="android:layout_margin">4dp</item>
         <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/ingress_green</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/coda</item>
+    </style>
+    <style name="ingress_text_title" parent="ingress_text">
+        <item name="android:textSize">@dimen/title_text_size</item>
     </style>
 
     <style name="imageviews">
@@ -38,4 +51,30 @@
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
+    <style name="ActionBarTitle">
+        <item name="android:textColor">@color/ingress_text_green</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ActionBarSubtitle">
+        <item name="android:textColor">@color/ingress_text_green</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!--<style name="IngressActionBarStyle">--><!--<item name="android:background">@color/ingress_black</item>--><!--<item name="background">@color/ingress_black</item>--><!--<item name="android:titleTextStyle">@style/ActionBarTitle</item>--><!--<item name="android:subtitleTextStyle">@style/ActionBarTitle</item>--><!--<item name="titleTextStyle">@style/ActionBarTitle</item>--><!--<item name="subtitleTextStyle">@style/ActionBarTitle</item>--><!--</style>-->
+
+    <style name="ingress_button_style_def">
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/ingress_button_style</item>
+        <item name="android:paddingLeft">@dimen/button_padding</item>
+        <item name="android:paddingRight">@dimen/button_padding</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textColor">@color/textButton</item>
+        <item name="fontFamily">@font/coda</item>
+    </style>
+
+    <style name="ingress_button_style_def_big" parent="ingress_button_style_def">
+        <item name="android:textSize">@dimen/button_text</item>
+    </style>
 </resources>

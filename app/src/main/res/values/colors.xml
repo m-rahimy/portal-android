@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#111</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="textButton">#9cf6f6</color>
+
+    <color name="ingress_text_green">#00a700</color>
+    <color name="ingress_black">#111</color>
+    <color name="ingress_orange">#FF6600</color>
+    <color name="ingress_blue">#0088FF</color>
+    <color name="ingress_green">#03DC03</color>
+    <color name="ingress_green_dark">#008700</color>
     <color name="transparent">#00000000</color>
+    <color name="ingress_level_0">#000</color>
+    <color name="ingress_level_1">#FECE5A</color>
+    <color name="ingress_level_2">#FFA630</color>
+    <color name="ingress_level_3">#FF7315</color>
+    <color name="ingress_level_4">#E40000</color>
+    <color name="ingress_level_5">#FD2992</color>
+    <color name="ingress_level_6">#EB26CD</color>
+    <color name="ingress_level_7">#C124E0</color>
+    <color name="ingress_level_8">#9627F4</color>
 </resources>

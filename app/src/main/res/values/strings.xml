@@ -8,4 +8,7 @@
     <string name="hello_b_fragment">Hello add fragment</string>
     <string name="hello_c_fragment">Hello sett fragment</string>
     <string name="loc_by_user">location by %1$s</string>
+    <string name="portal_card_title_sample">میدان آزادی</string>
+    <string name="portal_card_sample_description">توضیحات میدان آزادی که می‌تون=اند بلند باشد .توضیحات میدان آزادی که می‌تون=اند بلند باشد توضیحات میدان آزادی که می‌تون=اند بلند باشد</string>
+    <string name="portal_card_sample_address">تهران میدان آرژانتین خیابان الوند</string>
 </resources>
