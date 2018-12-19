@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/ingress_black"
     android:scrollbars="vertical"
+    android:layout_marginBottom="?attr/actionBarSize"
     tools:context=".view.fragments.AddPortalFragment">
 
     <LinearLayout
