@@ -13,6 +13,8 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun List<DbPortal>.getFullData(contentResolver: ContentResolver): List<Portal> {
     val res = mutableListOf<Portal>()
@@ -154,3 +156,10 @@ fun MapView.simpleSetup(context: Context, center: GeoPoint, zoom: Double?,
         this.overlays.add(compass)
     }
 }
+
+fun Date.toMySqlformat(): String {
+    //"2018-12-07 09:43:21"
+    val format = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+    return format.format(this)
+}
+

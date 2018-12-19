@@ -70,7 +70,15 @@ class HomeFragment : Fragment() {
                 PortalContract.Portal.CONTENT_URI, null, null, null, null
         )
         portalCursor?.moveToFirst()
-        //Timber.d("$TAG cursor count :${portalCursor?.count}")
+        Log.d(TAG, " cursor count :${portalCursor?.count}")
+        do {
+            try{
+                Log.d(TAG, " date format :${portalCursor?.getString(
+                        portalCursor?.getColumnIndex(PortalContract.Portal.COL_updated_date))}")
+            }catch (e:CursorIndexOutOfBoundsException){
+                e.printStackTrace()
+            }
+        } while (portalCursor.moveToNext())
         portalCursor?.close()
     }
 

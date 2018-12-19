@@ -57,7 +57,10 @@ class PortalAdapter(private val context: Context,
             //(context as MainActivity).goToStaticLocationActivity(portal.locations)
         }
 
-        holder.portalCardAddress.text = portal.locations?.get(0)?.location?.address ?: "بدون آدرس"
+        holder.portalCardAddress.text =
+                if (portal.locations?.isNotEmpty()!!)
+                    portal.locations?.get(0)?.location?.address
+                else "بدون آدرس"
 
     }
 

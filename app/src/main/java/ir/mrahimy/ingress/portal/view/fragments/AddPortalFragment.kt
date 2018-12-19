@@ -1,6 +1,7 @@
 package ir.mrahimy.ingress.portal.view.fragments
 
 import android.app.Activity.RESULT_CANCELED
+import android.content.ContentProviderOperation
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,10 +14,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.loopj.android.http.JsonHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 
@@ -25,12 +22,18 @@ import ir.mrahimy.ingress.portal.net.PortalRestClient
 import org.json.JSONObject
 import android.media.MediaScannerConnection
 import android.os.Environment
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.*
 import com.loopj.android.http.RequestParams
+import ir.mrahimy.ingress.portal.dbmodel.*
+import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.util.ImageFilePath
+import ir.mrahimy.ingress.portal.util.toMySqlformat
 import ir.mrahimy.ingress.portal.view.ChooseLocationActivity
+import kotlinx.android.synthetic.main.portal_card.*
 import java.io.*
 import java.lang.Exception
-import java.nio.ByteBuffer
 import java.util.*
 
 
@@ -49,6 +52,9 @@ class AddPortalFragment : Fragment() {
     lateinit var add_portal_image1: ImageView
     lateinit var add_portal_image2: ImageView
     lateinit var add_portal_image3: ImageView
+    lateinit var descriptionEditText: EditText
+    lateinit var titleEditText: EditText
+    lateinit var add_portal_send_button: Button
     var zoom: Double? = 5.5
 
     val portalImageIds = mutableListOf<String?>()
@@ -92,6 +98,15 @@ class AddPortalFragment : Fragment() {
         add_portal_location_text_lat = view.findViewById(R.id.add_portal_location_text_lat)
         add_portal_location_text_lon = view.findViewById(R.id.add_portal_location_text_lon)
         add_portal_address_text = view.findViewById(R.id.add_portal_address_text)
+        descriptionEditText = view.findViewById(R.id.add_portal_description)
+        titleEditText = view.findViewById(R.id.add_portal_title)
+        titleEditText.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+            override fun afterTextChanged(p0: Editable?) {
+                add_portal_send_button.isEnabled = p0?.length!! > 3
+            }
+        })
 
         add_portal_image1 = view.findViewById<ImageView>(R.id.add_portal_image1)
         add_portal_image1.setOnClickListener {
@@ -107,6 +122,84 @@ class AddPortalFragment : Fragment() {
         add_portal_image3.setOnClickListener {
             showChooseDialogue(3)
         }
+
+        add_portal_send_button = view.findViewById<Button>(R.id.add_portal_send_button)
+        add_portal_send_button.setOnClickListener {
+            beginSavePortalProcess()
+        }
+
+        view.findViewById<Button>(R.id.add_portal_clear_button).setOnClickListener {
+            clearFields()
+        }
+
+
+    }
+
+    private fun clearFields() {
+        portalImageIds.clear()
+    }
+
+    private fun beginSavePortalProcess() {
+        /*
+            PortalLocation
+            ImageUrls
+            Portals
+            PortalImages
+            PortalJuncLoc
+         */
+        //TODO: get content resolver, send it to local database
+        val contentResolver = activity!!.applicationContext.contentResolver
+        val batch = arrayListOf<ContentProviderOperation>()
+        Log.d(TAG, " date format ${Date().toMySqlformat()}") //"2018-12-07 09:43:21"
+        val date = Date().toMySqlformat()
+
+        val portalLocation = DbPortalLocation()
+        val imageUrl = mutableListOf<DbImageUrl>() //TODO
+        val portal = DbPortal()
+        val portalImage = mutableListOf<DbPortalImage>() //TODO
+        val portalJlocation = DbPortalJuncLocation()
+
+        portalLocation.id = UUID.randomUUID().toString()
+        portalLocation.uploader = "sargeVincent"//TODO: get from prefs
+        portalLocation.lat = add_portal_location_text_lat.text.toString().toDouble()
+        portalLocation.lon = add_portal_location_text_lon.text.toString().toDouble()
+        portalLocation.address = add_portal_address_text.text.toString()
+        portalLocation.inserted_date = date
+        portalLocation.updated_date = date
+
+        portal.id = UUID.randomUUID().toString()
+        portal.title = titleEditText.text.toString()
+        portal.description = descriptionEditText.text.toString()
+        portal.uploader = "sargeVincent" // TODO
+        portal.inserted_date = date
+        portal.updated_date = date
+
+        batch.add(ContentProviderOperation.newInsert(PortalContract.PortalLocation.CONTENT_URI)
+                .withValue(PortalContract.PortalLocation.COL_id, portalLocation.id)
+                .withValue(PortalContract.PortalLocation.COL_lat, portalLocation.lat)
+                .withValue(PortalContract.PortalLocation.COL_lon, portalLocation.lon)
+                .withValue(PortalContract.PortalLocation.COL_address, portalLocation.address)
+                .withValue(PortalContract.PortalLocation.COL_uploader_name, portalLocation.uploader)
+                .withValue(PortalContract.PortalLocation.COL_inserted_date, portalLocation.inserted_date)
+                .withValue(PortalContract.PortalLocation.COL_updated_date, portalLocation.updated_date)
+                .build())
+
+        batch.add(ContentProviderOperation.newInsert(PortalContract.Portal.CONTENT_URI)
+                .withValue(PortalContract.Portal.COL_id, portal.id)
+                .withValue(PortalContract.Portal.COL_title, portal.title)
+                .withValue(PortalContract.Portal.COL_description, portal.description)
+                .withValue(PortalContract.Portal.COL_uploader, portal.uploader)
+                .withValue(PortalContract.Portal.COL_inserted_date, portal.inserted_date)
+                .withValue(PortalContract.Portal.COL_updated_date, portal.updated_date)
+                .build())
+
+        //TODO : others
+        contentResolver.applyBatch(PortalContract.CONTENT_AUTHORITY, batch)
+        contentResolver.notifyChange(PortalContract.PortalLocation.CONTENT_URI,
+                null, false)
+
+        //TODO: checkInternet {request sync}
+
     }
 
     private fun goToChooseLocation(lat: Double, lon: Double, zoom: Double? = 5.5) {

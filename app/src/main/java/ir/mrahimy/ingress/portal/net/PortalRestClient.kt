@@ -36,12 +36,20 @@ object PortalRestClient {
         syncClient.post(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
+    fun putSync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
+        syncClient.put(getPortalAbsoluteUrl(url), params, responseHandler)
+    }
+
     fun getAsync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
         asyncClient.get(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
     fun postAsync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
         asyncClient.post(getPortalAbsoluteUrl(url), params, responseHandler)
+    }
+
+    fun putAsync(url: String, params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
+        asyncClient.put(getPortalAbsoluteUrl(url), params, responseHandler)
     }
 
     fun uploadImage(params: RequestParams, responseHandler: AsyncHttpResponseHandler) {

@@ -823,6 +823,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                         //send to server
                         val localPortal = DbPortal(id, title, description, uploader,
                                 inserted_date, updated_date)
+                        Log.d(TAG + 1111, "sending portal to server: $localPortal")
                         sendToServer(localPortal)
                     } else {
                         // does not exist in local
@@ -830,6 +831,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                         // update?
                         if (networkPortal!!.updated_date?.compareTo(updated_date)!! > 0) {
                             //update local
+                            Log.d(TAG + 1111, "updating portal from server: $networkPortal")
                             batch.add(ContentProviderOperation.newUpdate(PortalContract.Portal.CONTENT_URI)
                                     .withSelection(PortalContract.Portal.COL_id + "='" + id + "'", null)
                                     .withValue(PortalContract.Portal.COL_title, networkPortal!!.title)
@@ -853,6 +855,7 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
 
                 for (e in nets.values) {
                     //Timber.i("$TAG, Scheduling insert ${e.javaClass.simpleName}: $e")
+                    Log.d(TAG + 1111, "inserting new portal from server: $e")
                     batch.add(ContentProviderOperation.newInsert(PortalContract.Portal.CONTENT_URI)
                             .withValue(PortalContract.Portal.COL_id, e.id)
                             .withValue(PortalContract.Portal.COL_title, e.title)
@@ -877,16 +880,8 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         })
     }
 
-    private fun sendToServer(local: DbPortalReport) {
-        val params = RequestParams()
-        params.add(PortalContract.PortalReport.COL_id, local.id)
-        params.add(PortalContract.PortalReport.COL_portal_id, local.portal_id)
-        params.add(PortalContract.PortalReport.COL_description, local.description)
-        params.add(PortalContract.PortalReport.COL_username, local.username)
-        params.add(PortalContract.PortalReport.COL_inserted_date, local.inserted_date)
-        params.add(PortalContract.PortalReport.COL_updated_date, local.updated_date)
-
-        PortalRestClient.postSync(PortalContract.PATH_portal_location, params, object : JsonHttpResponseHandler() {
+    private fun putToServer(params: RequestParams, path: String) {
+        PortalRestClient.putSync(path, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
                 //Timber.d("$TAG, $response")
@@ -897,6 +892,18 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
                 //Timber.d("$TAG, $responseString")
             }
         })
+    }
+
+    private fun sendToServer(local: DbPortalReport) {
+        val params = RequestParams()
+        params.add(PortalContract.PortalReport.COL_id, local.id)
+        params.add(PortalContract.PortalReport.COL_portal_id, local.portal_id)
+        params.add(PortalContract.PortalReport.COL_description, local.description)
+        params.add(PortalContract.PortalReport.COL_username, local.username)
+        params.add(PortalContract.PortalReport.COL_inserted_date, local.inserted_date)
+        params.add(PortalContract.PortalReport.COL_updated_date, local.updated_date)
+
+        putToServer(params, PortalContract.PATH_portal_report)
 
     }
 
@@ -1037,15 +1044,15 @@ class SyncAdapter @JvmOverloads constructor(context: Context, autoInitialize: Bo
         params.add(PortalContract.Portal.COL_inserted_date, localPortal.inserted_date)
         params.add(PortalContract.Portal.COL_updated_date, localPortal.updated_date)
 
-        PortalRestClient.postSync(PortalContract.PATH_PORTALS, params, object : JsonHttpResponseHandler() {
+        PortalRestClient.putSync(PortalContract.PATH_PORTALS, params, object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
                 super.onSuccess(statusCode, headers, response)
-                //Timber.d("$TAG, $response")
+                Log.d(TAG + 1111, response.toString())
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
                 super.onFailure(statusCode, headers, responseString, throwable)
-                //Timber.d("$TAG, $responseString")
+                Log.d(TAG + 1111, responseString)
             }
         })
     }
