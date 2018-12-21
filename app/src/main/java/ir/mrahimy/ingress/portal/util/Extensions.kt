@@ -1,9 +1,13 @@
 package ir.mrahimy.ingress.portal.util
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import ir.mrahimy.ingress.portal.dbmodel.*
 import ir.mrahimy.ingress.portal.model.*
+import ir.mrahimy.ingress.portal.net.InternetCheck
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -163,3 +167,15 @@ fun Date.toMySqlformat(): String {
     return format.format(this)
 }
 
+fun Activity.checkInternet(successPredicate: () -> Unit, failurePredicate: () -> Unit) {
+    InternetCheck(object : InternetCheck.Consumer {
+        override fun accept(internet: Boolean?) {
+            Log.d("UPLOAD_DEBUG", "InternetCheck: access is $internet")
+            if (internet!!) successPredicate() else failurePredicate()
+        }
+    })
+}
+
+fun Activity.toastNoInternet() {
+    Toast.makeText(this, "No internet", Toast.LENGTH_LONG).show()
+}

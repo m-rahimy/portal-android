@@ -53,7 +53,7 @@ object PortalRestClient {
     }
 
     fun uploadImage(params: RequestParams, responseHandler: AsyncHttpResponseHandler) {
-        Log.d(TAG, IMAGE_UPLOAD_PATH)
+        Log.d("UPLOAD_DEBUG", "path is $IMAGE_UPLOAD_PATH")
         asyncClient.post(IMAGE_UPLOAD_PATH, params, responseHandler)
     }
 

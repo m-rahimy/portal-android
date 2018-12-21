@@ -27,11 +27,15 @@ import android.text.TextWatcher
 import android.widget.*
 import com.loopj.android.http.RequestParams
 import ir.mrahimy.ingress.portal.dbmodel.*
+import ir.mrahimy.ingress.portal.net.GetAddressHandler
+import ir.mrahimy.ingress.portal.net.UploadResponseHandler
 import ir.mrahimy.ingress.portal.sync.PortalContract
+import ir.mrahimy.ingress.portal.sync.SyncAdapter
 import ir.mrahimy.ingress.portal.util.ImageFilePath
+import ir.mrahimy.ingress.portal.util.checkInternet
 import ir.mrahimy.ingress.portal.util.toMySqlformat
+import ir.mrahimy.ingress.portal.util.toastNoInternet
 import ir.mrahimy.ingress.portal.view.ChooseLocationActivity
-import kotlinx.android.synthetic.main.portal_card.*
 import java.io.*
 import java.lang.Exception
 import java.util.*
@@ -46,15 +50,15 @@ import java.util.*
  * create an instance of this fragment.
  */
 class AddPortalFragment : Fragment() {
-    lateinit var add_portal_location_text_lat: TextView
-    lateinit var add_portal_location_text_lon: TextView
-    lateinit var add_portal_address_text: TextView
-    lateinit var add_portal_image1: ImageView
-    lateinit var add_portal_image2: ImageView
-    lateinit var add_portal_image3: ImageView
-    lateinit var descriptionEditText: EditText
-    lateinit var titleEditText: EditText
-    lateinit var add_portal_send_button: Button
+    lateinit var latTxt: TextView
+    lateinit var lonTxt: TextView
+    lateinit var addressTxt: TextView
+    lateinit var image1: ImageView
+    lateinit var image2: ImageView
+    lateinit var image3: ImageView
+    lateinit var descriptionTxt: EditText
+    lateinit var titleTxt: EditText
+    lateinit var sendButton: Button
     var zoom: Double? = 5.5
 
     val portalImageIds = mutableListOf<String?>()
@@ -75,7 +79,6 @@ class AddPortalFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_portal, container, false)
     }
 
@@ -90,48 +93,47 @@ class AddPortalFragment : Fragment() {
         val chooseLocationButton = view.findViewById<Button>(R.id.add_portal_location_button)
         chooseLocationButton.setOnClickListener {
             if (hasLatLon)
-                goToChooseLocation(add_portal_location_text_lat.text.toString().toDouble()
-                        , add_portal_location_text_lon.text.toString().toDouble(), zoom)
+                goToChooseLocation(latTxt.text.toString().toDouble()
+                        , lonTxt.text.toString().toDouble(), zoom)
             else goToChooseLocation(0.0, 0.0, zoom)
         }
 
-        add_portal_location_text_lat = view.findViewById(R.id.add_portal_location_text_lat)
-        add_portal_location_text_lon = view.findViewById(R.id.add_portal_location_text_lon)
-        add_portal_address_text = view.findViewById(R.id.add_portal_address_text)
-        descriptionEditText = view.findViewById(R.id.add_portal_description)
-        titleEditText = view.findViewById(R.id.add_portal_title)
-        titleEditText.addTextChangedListener(object : TextWatcher {
+        latTxt = view.findViewById(R.id.add_portal_location_text_lat)
+        lonTxt = view.findViewById(R.id.add_portal_location_text_lon)
+        addressTxt = view.findViewById(R.id.add_portal_address_text)
+        descriptionTxt = view.findViewById(R.id.add_portal_description)
+        titleTxt = view.findViewById(R.id.add_portal_title)
+        titleTxt.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun afterTextChanged(p0: Editable?) {
-                add_portal_send_button.isEnabled = p0?.length!! > 3
+                sendButton.isEnabled = p0?.length!! > 3
             }
         })
 
-        add_portal_image1 = view.findViewById<ImageView>(R.id.add_portal_image1)
-        add_portal_image1.setOnClickListener {
+        image1 = view.findViewById<ImageView>(R.id.add_portal_image1)
+        image1.setOnClickListener {
             showChooseDialogue(1)
         }
 
-        add_portal_image2 = view.findViewById<ImageView>(R.id.add_portal_image2)
-        add_portal_image2.setOnClickListener {
+        image2 = view.findViewById<ImageView>(R.id.add_portal_image2)
+        image2.setOnClickListener {
             showChooseDialogue(2)
         }
 
-        add_portal_image3 = view.findViewById<ImageView>(R.id.add_portal_image3)
-        add_portal_image3.setOnClickListener {
+        image3 = view.findViewById<ImageView>(R.id.add_portal_image3)
+        image3.setOnClickListener {
             showChooseDialogue(3)
         }
 
-        add_portal_send_button = view.findViewById<Button>(R.id.add_portal_send_button)
-        add_portal_send_button.setOnClickListener {
+        sendButton = view.findViewById<Button>(R.id.add_portal_send_button)
+        sendButton.setOnClickListener {
             beginSavePortalProcess()
         }
 
         view.findViewById<Button>(R.id.add_portal_clear_button).setOnClickListener {
             clearFields()
         }
-
 
     }
 
@@ -161,15 +163,15 @@ class AddPortalFragment : Fragment() {
 
         portalLocation.id = UUID.randomUUID().toString()
         portalLocation.uploader = "sargeVincent"//TODO: get from prefs
-        portalLocation.lat = add_portal_location_text_lat.text.toString().toDouble()
-        portalLocation.lon = add_portal_location_text_lon.text.toString().toDouble()
-        portalLocation.address = add_portal_address_text.text.toString()
+        portalLocation.lat = latTxt.text.toString().toDouble()
+        portalLocation.lon = lonTxt.text.toString().toDouble()
+        portalLocation.address = addressTxt.text.toString()
         portalLocation.inserted_date = date
         portalLocation.updated_date = date
 
         portal.id = UUID.randomUUID().toString()
-        portal.title = titleEditText.text.toString()
-        portal.description = descriptionEditText.text.toString()
+        portal.title = titleTxt.text.toString()
+        portal.description = descriptionTxt.text.toString()
         portal.uploader = "sargeVincent" // TODO
         portal.inserted_date = date
         portal.updated_date = date
@@ -199,6 +201,7 @@ class AddPortalFragment : Fragment() {
                 null, false)
 
         //TODO: checkInternet {request sync}
+        SyncAdapter.performSync()
 
     }
 
@@ -277,109 +280,110 @@ class AddPortalFragment : Fragment() {
         val TITLE: CharSequence? = "Suggesting Portals"
     }
 
-    private val imageUploadCallback = object : JsonHttpResponseHandler() {
-        override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
-            super.onSuccess(statusCode, headers, response)
-            Log.d(TAG, response.toString())
-            portalImageIds.add(response?.optString("filename"))
-        }
-
-        override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
-            super.onFailure(statusCode, headers, responseString, throwable)
-            Log.d(TAG, responseString)
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == RESULT_CANCELED) {
             return
         }
-        if (requestCode == CODE_ADD_LOCATION) {
-            //Log.d(TAG, data?.getDoubleExtra("lat", 0.0).toString())
-            //Log.d(TAG, data?.getDoubleExtra("lon", 0.0).toString())
-            val lat = data?.getDoubleExtra("lat", 0.0).toString()
-            val lon = data?.getDoubleExtra("lon", 0.0).toString()
-            zoom = data?.getDoubleExtra("zoom", 5.5)
 
-            add_portal_location_text_lat.text = lat
-            add_portal_location_text_lon.text = lon
-            hasLatLon = true
+        when (requestCode) {
+            CODE_ADD_LOCATION -> handleLocationChoosing(data)
+            GALLERY1, GALLERY2, GALLERY3 -> handleGalleryResponse(data, requestCode)
+            CAMERA1, CAMERA2, CAMERA3 -> handleCameraResponse(data, requestCode)
+        }
+    }
 
-            PortalRestClient.getAddressForPoint(lat, lon, object : JsonHttpResponseHandler() {
-                override fun onSuccess(statusCode: Int, headers: Array<out Header>?, response: JSONObject?) {
-                    super.onSuccess(statusCode, headers, response)
-                    add_portal_address_text.text = response?.optString("address")
-                }
+    private fun handleLocationChoosing(data: Intent?) {
+        val lat = data?.getDoubleExtra("lat", 0.0).toString()
+        val lon = data?.getDoubleExtra("lon", 0.0).toString()
+        zoom = data?.getDoubleExtra("zoom", 5.5)
 
-                override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseString: String?, throwable: Throwable?) {
-                    super.onFailure(statusCode, headers, responseString, throwable)
-                    Log.d(TAG, responseString)
-                }
-            })
+        latTxt.text = lat
+        lonTxt.text = lon
+        hasLatLon = true
+        getAddress(lat, lon)
+    }
 
-        } else if (requestCode == GALLERY1 || requestCode == GALLERY2 || requestCode == GALLERY3) {
-            if (data != null) {
-                val contentURI = data.data
+    private fun handleCameraResponse(data: Intent?, requestCode: Int) {
+        val thumbnail = data?.extras?.get("data") as Bitmap
+        val path = saveImage(thumbnail)
+        //TODO: upload
+        uploadImage(path, { setImageBitmapToImageView(thumbnail, requestCode) },
+                { showUploadFailToast() }
+        )
+    }
+
+    private fun handleGalleryResponse(data: Intent?, requestCode: Int) {
+        if (data == null) return
+        var success = false
+        val contentURI = data.data
+        var bitmap =
                 try {
-                    val bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, contentURI)
-                    //Toast.makeText(activity, "Image Saved! PATH=$path", Toast.LENGTH_SHORT).show()
-                    //TODO: upload
-                    val path = ImageFilePath.getPath(activity, contentURI)
-                    Log.d(TAG, "path is $path")
-                    val params = RequestParams()
-                    var success = false
-                    try {
-                        val file = File(path)
-                        Log.d(TAG, "file path is ${file.absolutePath}")
-                        params.put("image", file)
-                        success = true
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    Log.d(TAG, "success is $success")
-
-                    if (success) {
-                        PortalRestClient.uploadImage(params, imageUploadCallback)
-                    }
-
-                    if (requestCode == GALLERY1) add_portal_image1.setImageBitmap(bitmap)
-                    if (requestCode == GALLERY2) add_portal_image2.setImageBitmap(bitmap)
-                    if (requestCode == GALLERY3) add_portal_image3.setImageBitmap(bitmap)
-
+                    MediaStore.Images.Media.getBitmap(activity?.contentResolver, contentURI)
                 } catch (e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(activity, "Failed!", Toast.LENGTH_SHORT).show()
+                    Bitmap.createBitmap(0, 0, Bitmap.Config.ALPHA_8)
                 }
-            }
 
-        } else if (requestCode == CAMERA1 || requestCode == CAMERA2 || requestCode == CAMERA3) {
-            val thumbnail = data?.extras?.get("data") as Bitmap
-            if (requestCode == CAMERA1) add_portal_image1.setImageBitmap(thumbnail)
-            if (requestCode == CAMERA2) add_portal_image2.setImageBitmap(thumbnail)
-            if (requestCode == CAMERA3) add_portal_image3.setImageBitmap(thumbnail)
-            val path = saveImage(thumbnail)
-            //TODO: upload
-            Log.d(TAG, "path is $path")
-            val params = RequestParams()
-            var success = false
-            try {
-                val file = File(path)
-                Log.d(TAG, "file path is ${file.absolutePath}")
-                params.put("image", file)
-                success = true
+        val path = try {
+            //upload
+            ImageFilePath.getPath(activity, contentURI)
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            Log.d(TAG, "success is $success")
-
-            if (success) {
-                PortalRestClient.uploadImage(params, imageUploadCallback)
-            }
-            Toast.makeText(activity, "Image Saved! $path", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            "none"
         }
+
+        if (bitmap == null || bitmap.height < 1 || bitmap.width < 1 ||
+                path == null || path == "none") {
+            return
+        }
+
+        Log.d("UPLOAD_DEBUG", "path = $path")
+        activity?.checkInternet({
+            uploadImage(path, { setImageBitmapToImageView(bitmap, requestCode) },
+                    { showUploadFailToast() }
+            )
+        }, { activity?.toastNoInternet() })
+    }
+
+    private fun getAddress(lat: String, lon: String) {
+        PortalRestClient.getAddressForPoint(lat, lon, GetAddressHandler(addressTxt))
+    }
+
+    fun setImageBitmapToImageView(image: Bitmap, requestCode: Int) {
+        when (requestCode) {
+            CAMERA1, GALLERY1 -> image1.setImageBitmap(image)
+            CAMERA2, GALLERY2 -> image2.setImageBitmap(image)
+            CAMERA3, GALLERY3 -> image3.setImageBitmap(image)
+        }
+    }
+
+    private fun uploadImage(path: String?, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        Log.d("UPLOAD_DEBUG", "uploadImage() path = $path")
+        val params = RequestParams()
+        var success = false
+        try {
+            val file = File(path)
+            Log.d("UPLOAD_DEBUG", "file path is ${file.absolutePath}")
+            params.put("image", file)
+            success = true
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        Log.d("UPLOAD_DEBUG", "success is $success")
+
+        if (success) {
+            PortalRestClient.uploadImage(params,
+                    UploadResponseHandler(portalImageIds, onSuccess, onFailure))
+        }
+    }
+
+    fun showUploadFailToast() {
+        Toast.makeText(this.activity, "Failed to upload !!", Toast.LENGTH_LONG)
     }
 
     fun showChooseDialogue(i: Int) {
