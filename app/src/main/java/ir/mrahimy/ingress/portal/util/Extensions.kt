@@ -1,8 +1,12 @@
 package ir.mrahimy.ingress.portal.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.Toast
 import ir.mrahimy.ingress.portal.dbmodel.*
@@ -178,4 +182,20 @@ fun Activity.checkInternet(successPredicate: () -> Unit, failurePredicate: () ->
 
 fun Activity.toastNoInternet() {
     Toast.makeText(this, "No internet", Toast.LENGTH_LONG).show()
+}
+
+fun Activity.hasCameraPermission(): Boolean {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+        // Permission is not granted
+        return false
+    }
+    return true
+}
+
+fun Activity.requestCameraPermission(PERMISSION_REQUEST_CODE: Int) {
+
+    ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.CAMERA),
+            PERMISSION_REQUEST_CODE)
 }

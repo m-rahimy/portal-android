@@ -1,9 +1,12 @@
 package ir.mrahimy.ingress.portal.view.fragments
 
+import android.Manifest
 import android.app.Activity.RESULT_CANCELED
 import android.content.ContentProviderOperation
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -14,14 +17,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.loopj.android.http.JsonHttpResponseHandler
-import cz.msebera.android.httpclient.Header
 
 import ir.mrahimy.ingress.portal.R
 import ir.mrahimy.ingress.portal.net.PortalRestClient
-import org.json.JSONObject
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Environment
+import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
@@ -31,10 +33,7 @@ import ir.mrahimy.ingress.portal.net.GetAddressHandler
 import ir.mrahimy.ingress.portal.net.UploadResponseHandler
 import ir.mrahimy.ingress.portal.sync.PortalContract
 import ir.mrahimy.ingress.portal.sync.SyncAdapter
-import ir.mrahimy.ingress.portal.util.ImageFilePath
-import ir.mrahimy.ingress.portal.util.checkInternet
-import ir.mrahimy.ingress.portal.util.toMySqlformat
-import ir.mrahimy.ingress.portal.util.toastNoInternet
+import ir.mrahimy.ingress.portal.util.*
 import ir.mrahimy.ingress.portal.view.ChooseLocationActivity
 import java.io.*
 import java.lang.Exception
@@ -59,6 +58,7 @@ class AddPortalFragment : Fragment() {
     lateinit var descriptionTxt: EditText
     lateinit var titleTxt: EditText
     lateinit var sendButton: Button
+    var glovbalI: Int = 0
     var zoom: Double? = 5.5
 
     val portalImageIds = mutableListOf<String?>()
@@ -255,6 +255,8 @@ class AddPortalFragment : Fragment() {
         private val CAMERA2 = 10022
         private val CAMERA3 = 10023
         private val IMAGE_DIRECTORY = "portal_images"
+        private val CAMERA_PERMISSION_CODE = 20001
+        val CODE_ADD_LOCATION = 1001
 
         /**
          * Use this factory method to create a new instance of
@@ -274,7 +276,6 @@ class AddPortalFragment : Fragment() {
             return fragment
         }
 
-        val CODE_ADD_LOCATION = 1001
 
         val TAG = AddPortalFragment::class.java.simpleName
         val TITLE: CharSequence? = "Suggesting Portals"
@@ -394,7 +395,14 @@ class AddPortalFragment : Fragment() {
         ) { dialog, which ->
             when (which) {
                 0 -> choosePhotoFromGallary(i)
-                1 -> takePhotoFromCamera(i)
+                1 -> {//TODO: CAMERA PERMISSION
+                    if (activity!!.hasCameraPermission()) {
+                        takePhotoFromCamera(i)
+                    } else {
+                        glovbalI = i
+                        activity?.requestCameraPermission(CAMERA_PERMISSION_CODE)
+                    }
+                }
             }
         }
         pictureDialog.show()
@@ -441,6 +449,44 @@ class AddPortalFragment : Fragment() {
         }
 
         return ""
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            CAMERA_PERMISSION_CODE -> handleCameraPermissionResult(permissions, grantResults)
+        }
+    }
+
+    private fun handleCameraPermissionResult(permissions: Array<out String>, grantResults: IntArray) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            takePhotoFromCamera(glovbalI)
+        }else{
+            handlePermissionDenial("CAMERA")
+        }
+    }
+
+    private fun handlePermissionDenial(s: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            showMessageOKCancel("You need to allow $s access permissions",
+                                    DialogInterface.OnClickListener { p0, p1 ->
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            activity?.requestCameraPermission(CAMERA_PERMISSION_CODE)
+                                        }
+                                    })
+                                            
+                        }
+                    }
+    }
+
+    private fun showMessageOKCancel(s: String, onClickListener: DialogInterface.OnClickListener) {
+        AlertDialog.Builder(activity!!)
+                .setMessage(s)
+                .setPositiveButton("OK", onClickListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show()
     }
 
 
