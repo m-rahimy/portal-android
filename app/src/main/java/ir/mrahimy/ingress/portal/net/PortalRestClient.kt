@@ -8,8 +8,8 @@ import com.loopj.android.http.SyncHttpClient
 import ir.mrahimy.ingress.portal.view.fragments.AddPortalFragment.Companion.TAG
 
 object PortalRestClient {
-    //private static final String BASE_URL = "http://api.oportalr.ir/";
-    private val BASE_URL = "http://192.168.1.150/portal/index.php/api/"
+    private val BASE_URL = "http://api.oportalr.ir/index.php/api/"
+    //private val BASE_URL = "http://192.168.1.150/portal/index.php/api/"
     private val VERSION = "1"
     private val PORTAL_BASE_URL = "${BASE_URL}v$VERSION/portal/"
 
